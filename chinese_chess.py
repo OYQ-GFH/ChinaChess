@@ -283,8 +283,8 @@ class Game(object):
                             self.operate(len(coord), coord, old_coord, new_coord, un1_coord, un2_coord, eat, name1,
                                          name2=NAME[-1])
                             eat = False
+                            self.no_go()
                     else:
-                        self.no_go()
                         return
                 else:
                     for un1, un2 in zip(UNPLACED_COORD, UNPLACED_RANGER):
@@ -324,13 +324,9 @@ class Game(object):
                 un2_coord = []
                 e = False
                 if "红" in name1 and self.red:
-                    self.red = False
-                    self.black = True
                     pygame.display.set_icon(self.ico2)
                     go_on(e)
                 elif "黑" in name1 and self.black:
-                    self.red = True
-                    self.black = False
                     pygame.display.set_icon(self.ico1)
                     go_on(e)
                 else:
@@ -349,14 +345,12 @@ class Game(object):
 
         if "红卒" in name1 and f_coord[1] <= d_coord[1]:
             if f_coord[1] <= 226:
-                self.no_go()
                 return False
             else:
                 if f_coord[0] == d_coord[0] and f_coord[1] + CHESS_INTERVAL1 == d_coord[1]:
-                    print("yes")
+                    self.no_go()
                     return True
                 else:
-                    self.no_go()
                     return False
         else:
             self.no_go()
