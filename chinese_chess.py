@@ -50,7 +50,7 @@ class Game(object):
         r_s = pygame.image.load("images/r_s.png")
         r_j = pygame.image.load("images/r_j.png")
         return (bg1, bg2, r_box, b_box), (b_z, b_p, b_c, b_m, b_x, b_s, b_j), (r_z, r_p, r_c, r_m, r_x, r_s, r_j)
-
+    
     @staticmethod
     def chess_coord():
         """计算坐标"""
@@ -58,109 +58,109 @@ class Game(object):
         # 计算所有棋子初始防置坐标
         initialize_coord = {
             # 黑棋
-            "黑车1": (CHESS_X_Y1, CHESS_X_Y1),
-            "黑马1": (CHESS_INTERVAL1 + CHESS_X_Y1, CHESS_X_Y1),
-            "黑象1": (CHESS_INTERVAL1 * 2 + CHESS_X_Y1, CHESS_X_Y1),
-            "黑士1": (CHESS_INTERVAL1 * 3 + CHESS_X_Y1, CHESS_X_Y1),
-            "黑将": (CHESS_INTERVAL1 * 4 + CHESS_X_Y1, CHESS_X_Y1),
-            "黑士2": (CHESS_INTERVAL1 * 5 + CHESS_X_Y1, CHESS_X_Y1),
-            "黑象2": (CHESS_INTERVAL1 * 6 + CHESS_X_Y1, CHESS_X_Y1),
-            "黑马2": (CHESS_INTERVAL1 * 7 + CHESS_X_Y1, CHESS_X_Y1),
-            "黑车2": (CHESS_INTERVAL1 * 8 + CHESS_X_Y1, CHESS_X_Y1),
-            "黑炮1": (CHESS_INTERVAL1 + CHESS_X_Y1, CHESS_INTERVAL1 * 2 + CHESS_X_Y1),
-            "黑炮2": (CHESS_INTERVAL1 * 7 + CHESS_X_Y1, CHESS_INTERVAL1 * 2 + CHESS_X_Y1),
-            "黑卒1": (CHESS_X_Y1, CHESS_INTERVAL1 * 3 + CHESS_X_Y1),
-            "黑卒2": (CHESS_INTERVAL1 * 2 + CHESS_X_Y1, CHESS_INTERVAL1 * 3 + CHESS_X_Y1),
-            "黑卒3": (CHESS_INTERVAL1 * 4 + CHESS_X_Y1, CHESS_INTERVAL1 * 3 + CHESS_X_Y1),
-            "黑卒4": (CHESS_INTERVAL1 * 6 + CHESS_X_Y1, CHESS_INTERVAL1 * 3 + CHESS_X_Y1),
-            "黑卒5": (CHESS_INTERVAL1 * 8 + CHESS_X_Y1, CHESS_INTERVAL1 * 3 + CHESS_X_Y1),
+            "黑车1": (CHESS_X, CHESS_Y),
+            "黑马1": (CHESS_INTERVAL1 + CHESS_X, CHESS_Y),
+            "黑象1": (CHESS_INTERVAL1 * 2 + CHESS_X, CHESS_Y),
+            "黑士1": (CHESS_INTERVAL1 * 3 + CHESS_X, CHESS_Y),
+            "黑将": (CHESS_INTERVAL1 * 4 + CHESS_X, CHESS_Y),
+            "黑士2": (CHESS_INTERVAL1 * 5 + CHESS_X, CHESS_Y),
+            "黑象2": (CHESS_INTERVAL1 * 6 + CHESS_X, CHESS_Y),
+            "黑马2": (CHESS_INTERVAL1 * 7 + CHESS_X, CHESS_Y),
+            "黑车2": (CHESS_INTERVAL1 * 8 + CHESS_X, CHESS_Y),
+            "黑炮1": (CHESS_INTERVAL1 + CHESS_X, CHESS_INTERVAL1 * 2 + CHESS_Y),
+            "黑炮2": (CHESS_INTERVAL1 * 7 + CHESS_X, CHESS_INTERVAL1 * 2 + CHESS_Y),
+            "黑卒1": (CHESS_X, CHESS_INTERVAL1 * 3 + CHESS_Y),
+            "黑卒2": (CHESS_INTERVAL1 * 2 + CHESS_X, CHESS_INTERVAL1 * 3 + CHESS_Y),
+            "黑卒3": (CHESS_INTERVAL1 * 4 + CHESS_X, CHESS_INTERVAL1 * 3 + CHESS_Y),
+            "黑卒4": (CHESS_INTERVAL1 * 6 + CHESS_X, CHESS_INTERVAL1 * 3 + CHESS_Y),
+            "黑卒5": (CHESS_INTERVAL1 * 8 + CHESS_X, CHESS_INTERVAL1 * 3 + CHESS_Y),
             # 红棋
-            "红车1": (CHESS_X_Y1, CHESS_INTERVAL1 * 9 + CHESS_X_Y1),
-            "红马1": (CHESS_INTERVAL1 + CHESS_X_Y1, CHESS_INTERVAL1 * 9 + CHESS_X_Y1),
-            "红象1": (CHESS_INTERVAL1 * 2 + CHESS_X_Y1, CHESS_INTERVAL1 * 9 + CHESS_X_Y1),
-            "红士1": (CHESS_INTERVAL1 * 3 + CHESS_X_Y1, CHESS_INTERVAL1 * 9 + CHESS_X_Y1),
-            "红将": (CHESS_INTERVAL1 * 4 + CHESS_X_Y1, CHESS_INTERVAL1 * 9 + CHESS_X_Y1),
-            "红士2": (CHESS_INTERVAL1 * 5 + CHESS_X_Y1, CHESS_INTERVAL1 * 9 + CHESS_X_Y1),
-            "红象2": (CHESS_INTERVAL1 * 6 + CHESS_X_Y1, CHESS_INTERVAL1 * 9 + CHESS_X_Y1),
-            "红马2": (CHESS_INTERVAL1 * 7 + CHESS_X_Y1, CHESS_INTERVAL1 * 9 + CHESS_X_Y1),
-            "红车2": (CHESS_INTERVAL1 * 8 + CHESS_X_Y1, CHESS_INTERVAL1 * 9 + CHESS_X_Y1),
-            "红炮1": (CHESS_INTERVAL1 + CHESS_X_Y1, CHESS_INTERVAL1 * 7 + CHESS_X_Y1),
-            "红炮2": (CHESS_INTERVAL1 * 7 + CHESS_X_Y1, CHESS_INTERVAL1 * 7 + CHESS_X_Y1),
-            "红卒1": (CHESS_X_Y1, CHESS_INTERVAL1 * 6 + CHESS_X_Y1),
-            "红卒2": (CHESS_INTERVAL1 * 2 + CHESS_X_Y1, CHESS_INTERVAL1 * 6 + CHESS_X_Y1),
-            "红卒3": (CHESS_INTERVAL1 * 4 + CHESS_X_Y1, CHESS_INTERVAL1 * 6 + CHESS_X_Y1),
-            "红卒4": (CHESS_INTERVAL1 * 6 + CHESS_X_Y1, CHESS_INTERVAL1 * 6 + CHESS_X_Y1),
-            "红卒5": (CHESS_INTERVAL1 * 8 + CHESS_X_Y1, CHESS_INTERVAL1 * 6 + CHESS_X_Y1)}
+            "红车1": (CHESS_X, CHESS_INTERVAL1 * 9 + CHESS_Y),
+            "红马1": (CHESS_INTERVAL1 + CHESS_X, CHESS_INTERVAL1 * 9 + CHESS_Y),
+            "红象1": (CHESS_INTERVAL1 * 2 + CHESS_X, CHESS_INTERVAL1 * 9 + CHESS_Y),
+            "红士1": (CHESS_INTERVAL1 * 3 + CHESS_X, CHESS_INTERVAL1 * 9 + CHESS_Y),
+            "红将": (CHESS_INTERVAL1 * 4 + CHESS_X, CHESS_INTERVAL1 * 9 + CHESS_Y),
+            "红士2": (CHESS_INTERVAL1 * 5 + CHESS_X, CHESS_INTERVAL1 * 9 + CHESS_Y),
+            "红象2": (CHESS_INTERVAL1 * 6 + CHESS_X, CHESS_INTERVAL1 * 9 + CHESS_Y),
+            "红马2": (CHESS_INTERVAL1 * 7 + CHESS_X, CHESS_INTERVAL1 * 9 + CHESS_Y),
+            "红车2": (CHESS_INTERVAL1 * 8 + CHESS_X, CHESS_INTERVAL1 * 9 + CHESS_Y),
+            "红炮1": (CHESS_INTERVAL1 + CHESS_X, CHESS_INTERVAL1 * 7 + CHESS_Y),
+            "红炮2": (CHESS_INTERVAL1 * 7 + CHESS_X, CHESS_INTERVAL1 * 7 + CHESS_Y),
+            "红卒1": (CHESS_X, CHESS_INTERVAL1 * 6 + CHESS_Y),
+            "红卒2": (CHESS_INTERVAL1 * 2 + CHESS_X, CHESS_INTERVAL1 * 6 + CHESS_Y),
+            "红卒3": (CHESS_INTERVAL1 * 4 + CHESS_X, CHESS_INTERVAL1 * 6 + CHESS_Y),
+            "红卒4": (CHESS_INTERVAL1 * 6 + CHESS_X, CHESS_INTERVAL1 * 6 + CHESS_Y),
+            "红卒5": (CHESS_INTERVAL1 * 8 + CHESS_X, CHESS_INTERVAL1 * 6 + CHESS_Y)}
 
         # 计算所有棋子初始未放置坐标
         unplaced_coord = [
             # 第一列
-            (CHESS_X_Y1, CHESS_INTERVAL1 + CHESS_X_Y1),
-            (CHESS_X_Y1, CHESS_INTERVAL1 * 2 + CHESS_X_Y1),
-            (CHESS_X_Y1, CHESS_INTERVAL1 * 4 + CHESS_X_Y1),
-            (CHESS_X_Y1, CHESS_INTERVAL1 * 5 + CHESS_X_Y1),
-            (CHESS_X_Y1, CHESS_INTERVAL1 * 7 + CHESS_X_Y1),
-            (CHESS_X_Y1, CHESS_INTERVAL1 * 8 + CHESS_X_Y1),
+            (CHESS_X, CHESS_INTERVAL1 + CHESS_Y),
+            (CHESS_X, CHESS_INTERVAL1 * 2 + CHESS_Y),
+            (CHESS_X, CHESS_INTERVAL1 * 4 + CHESS_Y),
+            (CHESS_X, CHESS_INTERVAL1 * 5 + CHESS_Y),
+            (CHESS_X, CHESS_INTERVAL1 * 7 + CHESS_Y),
+            (CHESS_X, CHESS_INTERVAL1 * 8 + CHESS_Y),
             # 第二列
-            (CHESS_INTERVAL1 + CHESS_X_Y1, CHESS_INTERVAL1 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 + CHESS_X_Y1, CHESS_INTERVAL1 * 3 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 + CHESS_X_Y1, CHESS_INTERVAL1 * 4 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 + CHESS_X_Y1, CHESS_INTERVAL1 * 5 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 + CHESS_X_Y1, CHESS_INTERVAL1 * 6 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 + CHESS_X_Y1, CHESS_INTERVAL1 * 8 + CHESS_X_Y1),
+            (CHESS_INTERVAL1 + CHESS_X, CHESS_INTERVAL1 + CHESS_Y),
+            (CHESS_INTERVAL1 + CHESS_X, CHESS_INTERVAL1 * 3 + CHESS_Y),
+            (CHESS_INTERVAL1 + CHESS_X, CHESS_INTERVAL1 * 4 + CHESS_Y),
+            (CHESS_INTERVAL1 + CHESS_X, CHESS_INTERVAL1 * 5 + CHESS_Y),
+            (CHESS_INTERVAL1 + CHESS_X, CHESS_INTERVAL1 * 6 + CHESS_Y),
+            (CHESS_INTERVAL1 + CHESS_X, CHESS_INTERVAL1 * 8 + CHESS_Y),
             # 第三列
-            (CHESS_INTERVAL1 * 2 + CHESS_X_Y1, CHESS_INTERVAL1 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 2 + CHESS_X_Y1, CHESS_INTERVAL1 * 2 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 2 + CHESS_X_Y1, CHESS_INTERVAL1 * 4 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 2 + CHESS_X_Y1, CHESS_INTERVAL1 * 5 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 2 + CHESS_X_Y1, CHESS_INTERVAL1 * 7 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 2 + CHESS_X_Y1, CHESS_INTERVAL1 * 8 + CHESS_X_Y1),
+            (CHESS_INTERVAL1 * 2 + CHESS_X, CHESS_INTERVAL1 + CHESS_Y),
+            (CHESS_INTERVAL1 * 2 + CHESS_X, CHESS_INTERVAL1 * 2 + CHESS_Y),
+            (CHESS_INTERVAL1 * 2 + CHESS_X, CHESS_INTERVAL1 * 4 + CHESS_Y),
+            (CHESS_INTERVAL1 * 2 + CHESS_X, CHESS_INTERVAL1 * 5 + CHESS_Y),
+            (CHESS_INTERVAL1 * 2 + CHESS_X, CHESS_INTERVAL1 * 7 + CHESS_Y),
+            (CHESS_INTERVAL1 * 2 + CHESS_X, CHESS_INTERVAL1 * 8 + CHESS_Y),
             # 第四列
-            (CHESS_INTERVAL1 * 3 + CHESS_X_Y1, CHESS_INTERVAL1 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 3 + CHESS_X_Y1, CHESS_INTERVAL1 * 2 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 3 + CHESS_X_Y1, CHESS_INTERVAL1 * 3 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 3 + CHESS_X_Y1, CHESS_INTERVAL1 * 4 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 3 + CHESS_X_Y1, CHESS_INTERVAL1 * 5 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 3 + CHESS_X_Y1, CHESS_INTERVAL1 * 6 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 3 + CHESS_X_Y1, CHESS_INTERVAL1 * 7 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 3 + CHESS_X_Y1, CHESS_INTERVAL1 * 8 + CHESS_X_Y1),
+            (CHESS_INTERVAL1 * 3 + CHESS_X, CHESS_INTERVAL1 + CHESS_Y),
+            (CHESS_INTERVAL1 * 3 + CHESS_X, CHESS_INTERVAL1 * 2 + CHESS_Y),
+            (CHESS_INTERVAL1 * 3 + CHESS_X, CHESS_INTERVAL1 * 3 + CHESS_Y),
+            (CHESS_INTERVAL1 * 3 + CHESS_X, CHESS_INTERVAL1 * 4 + CHESS_Y),
+            (CHESS_INTERVAL1 * 3 + CHESS_X, CHESS_INTERVAL1 * 5 + CHESS_Y),
+            (CHESS_INTERVAL1 * 3 + CHESS_X, CHESS_INTERVAL1 * 6 + CHESS_Y),
+            (CHESS_INTERVAL1 * 3 + CHESS_X, CHESS_INTERVAL1 * 7 + CHESS_Y),
+            (CHESS_INTERVAL1 * 3 + CHESS_X, CHESS_INTERVAL1 * 8 + CHESS_Y),
             # 第五列
-            (CHESS_INTERVAL1 * 4 + CHESS_X_Y1, CHESS_INTERVAL1 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 4 + CHESS_X_Y1, CHESS_INTERVAL1 * 2 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 4 + CHESS_X_Y1, CHESS_INTERVAL1 * 4 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 4 + CHESS_X_Y1, CHESS_INTERVAL1 * 5 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 4 + CHESS_X_Y1, CHESS_INTERVAL1 * 7 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 4 + CHESS_X_Y1, CHESS_INTERVAL1 * 8 + CHESS_X_Y1),
+            (CHESS_INTERVAL1 * 4 + CHESS_X, CHESS_INTERVAL1 + CHESS_Y),
+            (CHESS_INTERVAL1 * 4 + CHESS_X, CHESS_INTERVAL1 * 2 + CHESS_Y),
+            (CHESS_INTERVAL1 * 4 + CHESS_X, CHESS_INTERVAL1 * 4 + CHESS_Y),
+            (CHESS_INTERVAL1 * 4 + CHESS_X, CHESS_INTERVAL1 * 5 + CHESS_Y),
+            (CHESS_INTERVAL1 * 4 + CHESS_X, CHESS_INTERVAL1 * 7 + CHESS_Y),
+            (CHESS_INTERVAL1 * 4 + CHESS_X, CHESS_INTERVAL1 * 8 + CHESS_Y),
             # 第六列
-            (CHESS_INTERVAL1 * 5 + CHESS_X_Y1, CHESS_INTERVAL1 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 5 + CHESS_X_Y1, CHESS_INTERVAL1 * 2 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 5 + CHESS_X_Y1, CHESS_INTERVAL1 * 3 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 5 + CHESS_X_Y1, CHESS_INTERVAL1 * 4 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 5 + CHESS_X_Y1, CHESS_INTERVAL1 * 5 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 5 + CHESS_X_Y1, CHESS_INTERVAL1 * 6 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 5 + CHESS_X_Y1, CHESS_INTERVAL1 * 7 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 5 + CHESS_X_Y1, CHESS_INTERVAL1 * 8 + CHESS_X_Y1),
+            (CHESS_INTERVAL1 * 5 + CHESS_X, CHESS_INTERVAL1 + CHESS_Y),
+            (CHESS_INTERVAL1 * 5 + CHESS_X, CHESS_INTERVAL1 * 2 + CHESS_Y),
+            (CHESS_INTERVAL1 * 5 + CHESS_X, CHESS_INTERVAL1 * 3 + CHESS_Y),
+            (CHESS_INTERVAL1 * 5 + CHESS_X, CHESS_INTERVAL1 * 4 + CHESS_Y),
+            (CHESS_INTERVAL1 * 5 + CHESS_X, CHESS_INTERVAL1 * 5 + CHESS_Y),
+            (CHESS_INTERVAL1 * 5 + CHESS_X, CHESS_INTERVAL1 * 6 + CHESS_Y),
+            (CHESS_INTERVAL1 * 5 + CHESS_X, CHESS_INTERVAL1 * 7 + CHESS_Y),
+            (CHESS_INTERVAL1 * 5 + CHESS_X, CHESS_INTERVAL1 * 8 + CHESS_Y),
             # 第七列
-            (CHESS_INTERVAL1 * 6 + CHESS_X_Y1, CHESS_INTERVAL1 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 6 + CHESS_X_Y1, CHESS_INTERVAL1 * 2 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 6 + CHESS_X_Y1, CHESS_INTERVAL1 * 4 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 6 + CHESS_X_Y1, CHESS_INTERVAL1 * 5 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 6 + CHESS_X_Y1, CHESS_INTERVAL1 * 7 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 6 + CHESS_X_Y1, CHESS_INTERVAL1 * 8 + CHESS_X_Y1),
+            (CHESS_INTERVAL1 * 6 + CHESS_X, CHESS_INTERVAL1 + CHESS_Y),
+            (CHESS_INTERVAL1 * 6 + CHESS_X, CHESS_INTERVAL1 * 2 + CHESS_Y),
+            (CHESS_INTERVAL1 * 6 + CHESS_X, CHESS_INTERVAL1 * 4 + CHESS_Y),
+            (CHESS_INTERVAL1 * 6 + CHESS_X, CHESS_INTERVAL1 * 5 + CHESS_Y),
+            (CHESS_INTERVAL1 * 6 + CHESS_X, CHESS_INTERVAL1 * 7 + CHESS_Y),
+            (CHESS_INTERVAL1 * 6 + CHESS_X, CHESS_INTERVAL1 * 8 + CHESS_Y),
             # 第八列
-            (CHESS_INTERVAL1 * 7 + CHESS_X_Y1, CHESS_INTERVAL1 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 7 + CHESS_X_Y1, CHESS_INTERVAL1 * 3 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 7 + CHESS_X_Y1, CHESS_INTERVAL1 * 4 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 7 + CHESS_X_Y1, CHESS_INTERVAL1 * 5 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 7 + CHESS_X_Y1, CHESS_INTERVAL1 * 6 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 7 + CHESS_X_Y1, CHESS_INTERVAL1 * 8 + CHESS_X_Y1),
+            (CHESS_INTERVAL1 * 7 + CHESS_X, CHESS_INTERVAL1 + CHESS_Y),
+            (CHESS_INTERVAL1 * 7 + CHESS_X, CHESS_INTERVAL1 * 3 + CHESS_Y),
+            (CHESS_INTERVAL1 * 7 + CHESS_X, CHESS_INTERVAL1 * 4 + CHESS_Y),
+            (CHESS_INTERVAL1 * 7 + CHESS_X, CHESS_INTERVAL1 * 5 + CHESS_Y),
+            (CHESS_INTERVAL1 * 7 + CHESS_X, CHESS_INTERVAL1 * 6 + CHESS_Y),
+            (CHESS_INTERVAL1 * 7 + CHESS_X, CHESS_INTERVAL1 * 8 + CHESS_Y),
             # 第九列
-            (CHESS_INTERVAL1 * 8 + CHESS_X_Y1, CHESS_INTERVAL1 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 8 + CHESS_X_Y1, CHESS_INTERVAL1 * 2 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 8 + CHESS_X_Y1, CHESS_INTERVAL1 * 4 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 8 + CHESS_X_Y1, CHESS_INTERVAL1 * 5 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 8 + CHESS_X_Y1, CHESS_INTERVAL1 * 7 + CHESS_X_Y1),
-            (CHESS_INTERVAL1 * 8 + CHESS_X_Y1, CHESS_INTERVAL1 * 8 + CHESS_X_Y1)]
+            (CHESS_INTERVAL1 * 8 + CHESS_X, CHESS_INTERVAL1 + CHESS_Y),
+            (CHESS_INTERVAL1 * 8 + CHESS_X, CHESS_INTERVAL1 * 2 + CHESS_Y),
+            (CHESS_INTERVAL1 * 8 + CHESS_X, CHESS_INTERVAL1 * 4 + CHESS_Y),
+            (CHESS_INTERVAL1 * 8 + CHESS_X, CHESS_INTERVAL1 * 5 + CHESS_Y),
+            (CHESS_INTERVAL1 * 8 + CHESS_X, CHESS_INTERVAL1 * 7 + CHESS_Y),
+            (CHESS_INTERVAL1 * 8 + CHESS_X, CHESS_INTERVAL1 * 8 + CHESS_Y)]
 
         keys = initialize_coord.keys()
         values = initialize_coord.values()
@@ -183,14 +183,14 @@ class Game(object):
         # 计算棋盘上棋子可点击的坐标
         all_x = []
         all_y = []
-        chess_x = CHESS_X_Y2
-        chess_y = CHESS_X_Y2
+        chess_x = 150
+        chess_y = 22
         for a_x in range(0, 9):
             all_x.append(chess_x)
-            chess_x += CHESS_INTERVAL2
+            chess_x += 57
         for a_y in range(0, 10):
             all_y.append(chess_y)
-            chess_y += CHESS_INTERVAL2
+            chess_y += 57
         for y in all_y:
             for x in all_x:
                 MIDPOINT.append((x, y))
@@ -211,8 +211,8 @@ class Game(object):
         self.chess_coord()
         bg, b_chess, r_chess = self.img_load()
 
-        self.window.blit(bg[0], (0, 0))
-        self.window.blit(bg[1], (500, 0))
+        self.window.blit(bg[1], (0, 0))
+        self.window.blit(bg[0], (128, 0))
         self.window.blit(b_chess[2], INIT_COORD[0])
         self.window.blit(b_chess[3], INIT_COORD[1])
         self.window.blit(b_chess[4], INIT_COORD[2])
@@ -376,10 +376,11 @@ class Game(object):
                 INIT_RANGER.insert(0, un2_coord[-1])
                 UNPLACED_COORD.insert(0, old_coord)
                 UNPLACED_RANGER.insert(0, new_coord)
+                print(old_coord)
                 print("事件: {}移动到{}".format(name1, coord[0]))
                 self.move.play()
 
-            self.window.blit(bg[0], (0, 0))
+            self.window.blit(bg[0], (128, 0))
             for a_name, init_coord in zip(CHESS_NAME, INIT_COORD):
                 CHESS_STATE[a_name] = init_coord
             if name2 is not None and eat:
@@ -407,8 +408,8 @@ class Game(object):
             self.update()
             coord.clear()
 
-        # self.logic(name1, old_coord, un1_coord)
-        if flag and self.logic(name1, old_coord, un1_coord[-1]):
+        # self.logic(name1, old_coord, un1_coord[-1])
+        if flag:
             bg, b_chess, r_chess = self.img_load()
             chess_name = {"黑卒": b_chess[0], "黑炮": b_chess[1], "黑车": b_chess[2], "黑马": b_chess[3],
                           "黑象": b_chess[4], "黑士": b_chess[5], "黑将": b_chess[6],
