@@ -1,4 +1,6 @@
 import sys
+import time
+
 import pygame
 from constant import *
 
@@ -16,9 +18,9 @@ class Game(object):
         pygame.init()
         pygame.mixer.init()
         pygame.mixer.music.load("./musics/start.mp3")
-        self.ico = pygame.image.load("./images/ico1.png")
+        self.ico1 = pygame.image.load("./images/ico1.png")
+        self.ico2 = pygame.image.load("./images/b_j.png")
         self.window = pygame.display.set_mode(WINDOW_SIZE)
-        pygame.display.set_icon(self.ico)
         pygame.display.set_caption(WINDOW_TITLE)
         self.move = pygame.mixer.Sound("musics/move.WAV")
         self.eat = pygame.mixer.Sound("./musics/eat.WAV")
@@ -184,7 +186,7 @@ class Game(object):
         all_x = []
         all_y = []
         chess_x = 150
-        chess_y = 22
+        chess_y = 23
         for a_x in range(0, 9):
             all_x.append(chess_x)
             chess_x += 57
@@ -282,12 +284,7 @@ class Game(object):
                                          name2=NAME[-1])
                             eat = False
                     else:
-                        if self.red:
-                            self.black = True
-                            self.red = False
-                        elif self.black:
-                            self.black = False
-                            self.red = True
+                        self.no_go()
                         return
                 else:
                     for un1, un2 in zip(UNPLACED_COORD, UNPLACED_RANGER):
@@ -300,11 +297,17 @@ class Game(object):
                             un1_coord.append(un1)
                             un2_coord.append(un2)
                     if len(NAME):
-                        self.operate(len(coord), coord, old_coord, new_coord, un1_coord, un2_coord, eat, name1,
-                                     name2=NAME[-1])
+                        if self.operate(len(coord), coord, old_coord, new_coord, un1_coord, un2_coord, eat, name1,
+                                     name2=NAME[-1]):
+                            return
+                        else:
+                            return
                     else:
-                        self.operate(len(coord), coord, old_coord, new_coord, un1_coord, un2_coord, eat, name1,
-                                     name2=None)
+                        if self.operate(len(coord), coord, old_coord, new_coord, un1_coord, un2_coord, eat, name1,
+                                     name2=None):
+                            return
+                        else:
+                            return
 
         for min_coord, max_coord in zip(MIN_COORD, MAX_COORD):
             min_x = min_coord[0]
@@ -323,26 +326,41 @@ class Game(object):
                 if "红" in name1 and self.red:
                     self.red = False
                     self.black = True
+                    pygame.display.set_icon(self.ico2)
                     go_on(e)
                 elif "黑" in name1 and self.black:
                     self.red = True
                     self.black = False
+                    pygame.display.set_icon(self.ico1)
                     go_on(e)
                 else:
                     return
 
-    @staticmethod
-    def logic(name1, d_coord, f_coord):
+    def no_go(self):
+        if self.red:
+            self.black = True
+            self.red = False
+        elif self.black:
+            self.black = False
+            self.red = True
+
+    def logic(self, name1, d_coord, f_coord):
         """棋子走棋逻辑判断"""
 
         if "红卒" in name1 and f_coord[1] <= d_coord[1]:
             if f_coord[1] <= 226:
-                pass
+                self.no_go()
+                return False
             else:
                 if f_coord[0] == d_coord[0] and f_coord[1] + CHESS_INTERVAL1 == d_coord[1]:
+                    print("yes")
                     return True
                 else:
+                    self.no_go()
                     return False
+        else:
+            self.no_go()
+            print("yes")
 
     def operate(self, flag, coord, old_coord, new_coord, un1_coord, un2_coord, eat, name1, name2):
         """棋子操作"""
@@ -376,8 +394,7 @@ class Game(object):
                 INIT_RANGER.insert(0, un2_coord[-1])
                 UNPLACED_COORD.insert(0, old_coord)
                 UNPLACED_RANGER.insert(0, new_coord)
-                print(old_coord)
-                print("事件: {}移动到{}".format(name1, coord[0]))
+                print("事件: {}从{}移动到{}".format(name1, old_coord, coord[0]))
                 self.move.play()
 
             self.window.blit(bg[0], (128, 0))
@@ -408,8 +425,8 @@ class Game(object):
             self.update()
             coord.clear()
 
-        # self.logic(name1, old_coord, un1_coord[-1])
-        if flag:
+        if flag and self.logic(name1, old_coord, un1_coord[-1]):
+        # if flag:
             bg, b_chess, r_chess = self.img_load()
             chess_name = {"黑卒": b_chess[0], "黑炮": b_chess[1], "黑车": b_chess[2], "黑马": b_chess[3],
                           "黑象": b_chess[4], "黑士": b_chess[5], "黑将": b_chess[6],
@@ -418,6 +435,8 @@ class Game(object):
             for name in chess_name.keys():
                 if name in name1:
                     blit1(chess_name[name])
+        else:
+            return
 
     def event(self):
         """事件判断"""
@@ -425,6 +444,7 @@ class Game(object):
         click_coord = []
         bg, b_chess, r_chess = self.img_load()
         while True:
+            time.sleep(0.001)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
