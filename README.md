@@ -1,6 +1,9 @@
 # ChinaChess
 
-![PyCharm](https://img.shields.io/badge/pycharm-143?style=for-the-badge&logo=pycharm&logoColor=black&color=black&labelColor=green)
+开发工具:
+![PyCharm](https://img.shields.io/badge/pycham-2023.1-brightgreen）
+![Python](https://img.shields.io/github/pipenv/locked/python-version/python/3?color=1&label=python&logoColor=1)
+![Pygame](https://img.shields.io/badge/pygame-2.1.3-brightgreen)
 
 > 纯python实现中国象棋,基于pygame模块开发,如在运行过程中
 > 遇到问题,或者优化本项目增加功能都可以进行提交.为此,我将感激不敬,谢谢！
