@@ -12,6 +12,8 @@ class Game(object):
     red = True
     black = False
     index = 0
+    chess_x = []
+    chess_y = []
 
     def __init__(self):
         pygame.init()
@@ -350,6 +352,27 @@ class Game(object):
                     FEASIBLE_COORD.append(all_coord)
             elif all_coord[0] == d_coord[0] and d_coord[1] + CHESS_INTERVAL1 == all_coord[1]:
                 FEASIBLE_COORD.append(all_coord)
+        
+        elif "红炮" in name1:
+            if (d_coord[0] == all_coord[0] or d_coord[1] == all_coord[1]) and d_coord != all_coord:
+                if all_coord[0] < d_coord[0]:
+                    pass
+                if all_coord[0] > d_coord[0]:
+                    pass
+                if all_coord[1] < d_coord[1]:
+                    if all_coord in INIT_COORD:
+                        self.chess_x.append(all_coord[0])
+                        self.chess_y.append(all_coord[1])
+                        if len(self.chess_y) >= 2:
+                            self.chess_x.sort(reverse=True)
+                            self.chess_y.sort(reverse=True)
+                            FEASIBLE_COORD.append((self.chess_x[1], self.chess_y[1]))
+                    else:
+                        if self.chess_y[0] < all_coord[1]:
+                            FEASIBLE_COORD.append(all_coord)
+                            
+                if all_coord[1] > d_coord[1]:
+                    pass
 
         else:
             pass
@@ -460,6 +483,8 @@ class Game(object):
                                 self.window.blit(bg[3], click_coord[-1])
                             if len(FEASIBLE_COORD):
                                 FEASIBLE_COORD.clear()
+                                self.chess_x.clear()
+                                self.chess_y.clear()
                             for n, old_coord, new_coord in zip(CHESS_NAME, INIT_COORD, INIT_RANGER):
                                 old_x = old_coord[0]
                                 old_y = old_coord[1]
@@ -467,6 +492,7 @@ class Game(object):
                                 new_y = new_coord[1]
                                 click1_x = event.pos[0]
                                 click1_y = event.pos[1]
+                                CHESS_INIT[n] = old_coord
                                 if old_x <= click1_x <= new_x and old_y <= click1_y <= new_y:
                                     name = n
                                     click_coord.append(old_coord)
@@ -475,6 +501,8 @@ class Game(object):
                             ALL_COORD = INIT_COORD + UNPLACED_COORD
                             for coord in ALL_COORD:
                                 self.show_dot(name, click_coord[-1], coord)
+                            print(self.chess_y)
+                            print(FEASIBLE_COORD)
                             """for dot_coord in FEASIBLE_COORD:
                                 dot_x = dot_coord[0] + CHESS_INTERVAL1
                                 dot_y = dot_coord[1] + CHESS_INTERVAL1
