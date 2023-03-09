@@ -1,12 +1,5 @@
 # ChinaChess
 
-![BiliBili](https://img.shields.io/badge/bilibili----brightgreen)
-![Github](https://img.shields.io/badge/github----brightgreen)
-
-![Windows](https://img.shields.io/badge/windows----brightgreen)
-![Linux](https://img.shields.io/badge/linux----brightgreen)
-![Macos](https://img.shields.io/badge/macos----brightgreen)
-
 ![Pycharm](https://img.shields.io/badge/pycham-2023.1-brightgreen)
 ![Python](https://img.shields.io/badge/python-3-brightgreen)
 ![Pygame](https://img.shields.io/badge/pygame-2.1.3-brightgreen)
