@@ -1,10 +1,15 @@
 # ChinaChess
 
-开发工具:
+|![Pycharm](https://img.shields.io/badge/pycham-2023.1-brightgreen)
+|![Python](https://img.shields.io/badge/python-3-brightgreen)
+|![Pygame](https://img.shields.io/badge/pygame-2.1.3-brightgreen)
 
-![Pycharm](https://img.shields.io/badge/pycham-2023.1-brightgreen)
-![Python](https://img.shields.io/badge/python-3-brightgreen)
-![Pygame](https://img.shields.io/badge/pygame-2.1.3-brightgreen)
+![Windows](https://img.shields.io/badge/windows----brightgreen)
+![Linux](https://img.shields.io/badge/linux----brightgreen)
+![Macos](https://img.shields.io/badge/macos----brightgreen)
+
+|![BiliBili](https://img.shields.io/badge/bilibili----brightgreen)
+|![Github](https://img.shields.io/badge/github----brightgreen)
 
 > 纯python实现中国象棋,基于pygame模块开发,如在运行过程中
 > 遇到问题,或者优化本项目增加功能都可以进行提交.为此,我将感激不敬,谢谢！
