@@ -1,6 +1,5 @@
 import sys
 import time
-
 import pygame
 from constant import *
 
@@ -20,6 +19,7 @@ class Game(object):
         pygame.mixer.music.load("./musics/start.mp3")
         self.ico1 = pygame.image.load("./images/ico1.png")
         self.ico2 = pygame.image.load("./images/b_j.png")
+        self.dot = pygame.image.load("./images/dot.png")
         self.window = pygame.display.set_mode(WINDOW_SIZE)
         pygame.display.set_caption(WINDOW_TITLE)
         self.move = pygame.mixer.Sound("musics/move.WAV")
@@ -34,7 +34,7 @@ class Game(object):
         """加载棋盘和棋子素材"""
 
         bg1 = pygame.image.load("images/bg1.png")
-        bg2 = pygame.image.load("images/bg2.png")
+        bg2 = pygame.image.load("images/bg3.png")
         r_box = pygame.image.load("images/r_box.png")
         b_box = pygame.image.load("images/b_box.png")
         b_z = pygame.image.load("images/b_z.png")
@@ -185,7 +185,7 @@ class Game(object):
         # 计算棋盘上棋子可点击的坐标
         all_x = []
         all_y = []
-        chess_x = 150
+        chess_x = 149
         chess_y = 23
         for a_x in range(0, 9):
             all_x.append(chess_x)
@@ -263,6 +263,7 @@ class Game(object):
                 # print("{}被点击了".format(name1))
                 # print("第一次点击: 棋子范围:({}~{}, {}~{}), 点击坐标:{}".format(old_x, new_x, old_y, new_y, click1))
                 self.click_2(click2, name1, old_coord, new_coord)
+                return
 
     def click_2(self, click2, name1, old_coord, new_coord):
         """第二次点击"""
@@ -271,21 +272,20 @@ class Game(object):
             """继续判断"""
             for name2, init_coord, init_ranger in zip(CHESS_NAME, INIT_COORD, INIT_RANGER):
                 # 判断两次点击是否都是棋子
-                if init_coord[0] < min_x < init_ranger[0] and init_coord[1] < min_y < init_ranger[1]:
+                # if init_coord[0] < min_x < init_ranger[0] and init_coord[1] < min_y < init_ranger[1]:
+                if init_coord[0] <= click2_x <= init_ranger[0] and init_coord[1] <= click2_y <= init_ranger[1]:
                     # 判断两次点击的棋子是否不一样
                     if "红" in name1 and "黑" in name2 or "黑" in name1 and "红" in name2:
-                        eat = True
-                        NAME.append(name2)
-                        coord.append(init_coord)
-                        un1_coord.append(init_coord)
-                        un2_coord.append(init_ranger)
-                        if len(NAME):
-                            self.operate(len(coord), coord, old_coord, new_coord, un1_coord, un2_coord, eat, name1,
-                                         name2=NAME[-1])
-                            eat = False
-                            self.no_go()
-                    else:
-                        return
+                        if self.logic(init_coord):
+                            eat = True
+                            NAME.append(name2)
+                            coord.append(init_coord)
+                            un1_coord.append(init_coord)
+                            un2_coord.append(init_ranger)
+                            if len(NAME):
+                                self.operate(len(coord), coord, old_coord, new_coord, un1_coord, un2_coord, eat, name1,
+                                             name2=NAME[-1])
+                                eat = False
                 else:
                     for un1, un2 in zip(UNPLACED_COORD, UNPLACED_RANGER):
                         un_x1 = un1[0]
@@ -297,17 +297,11 @@ class Game(object):
                             un1_coord.append(un1)
                             un2_coord.append(un2)
                     if len(NAME):
-                        if self.operate(len(coord), coord, old_coord, new_coord, un1_coord, un2_coord, eat, name1,
-                                     name2=NAME[-1]):
-                            return
-                        else:
-                            return
+                        self.operate(len(coord), coord, old_coord, new_coord, un1_coord, un2_coord, eat, name1,
+                                     name2=NAME[-1])
                     else:
-                        if self.operate(len(coord), coord, old_coord, new_coord, un1_coord, un2_coord, eat, name1,
-                                     name2=None):
-                            return
-                        else:
-                            return
+                        self.operate(len(coord), coord, old_coord, new_coord, un1_coord, un2_coord, eat, name1,
+                                     name2=None)
 
         for min_coord, max_coord in zip(MIN_COORD, MAX_COORD):
             min_x = min_coord[0]
@@ -324,37 +318,49 @@ class Game(object):
                 un2_coord = []
                 e = False
                 if "红" in name1 and self.red:
-                    pygame.display.set_icon(self.ico2)
                     go_on(e)
                 elif "黑" in name1 and self.black:
-                    pygame.display.set_icon(self.ico1)
                     go_on(e)
                 else:
                     return
 
     def no_go(self):
         if self.red:
+            pygame.display.set_icon(self.ico2)
             self.black = True
             self.red = False
         elif self.black:
+            pygame.display.set_icon(self.ico1)
             self.black = False
             self.red = True
+    
+    def show_dot(self, name1, d_coord, all_coord):
+        """显示点击棋子可以走的点"""
+        
+        if "红卒" in name1 and all_coord[1] <= d_coord[1]:
+            if d_coord[1] <= 226:
+                if (d_coord[0] - CHESS_INTERVAL1 == all_coord[0] and d_coord[1] == all_coord[1]) or (d_coord[0] + CHESS_INTERVAL1 == all_coord[0] and d_coord[1] == all_coord[1]) or (d_coord[0] == all_coord[0] and d_coord[1] - CHESS_INTERVAL1 == all_coord[1]):
+                    FEASIBLE_COORD.append(all_coord)
+            elif all_coord[0] == d_coord[0] and d_coord[1] - CHESS_INTERVAL1 == all_coord[1]:
+                FEASIBLE_COORD.append(all_coord)
 
-    def logic(self, name1, d_coord, f_coord):
+        elif "黑卒" in name1 and all_coord[1] >= d_coord[1]:
+            if d_coord[1] >= 282:
+                if (d_coord[0] - CHESS_INTERVAL1 == all_coord[0] and d_coord[1] == all_coord[1]) or (d_coord[0] + CHESS_INTERVAL1 == all_coord[0] and d_coord[1] == all_coord[1]) or (d_coord[0] == all_coord[0] and d_coord[1] + CHESS_INTERVAL1 == all_coord[1]):
+                    FEASIBLE_COORD.append(all_coord)
+            elif all_coord[0] == d_coord[0] and d_coord[1] + CHESS_INTERVAL1 == all_coord[1]:
+                FEASIBLE_COORD.append(all_coord)
+
+        else:
+            pass
+
+    @staticmethod
+    def logic(f_coord):
         """棋子走棋逻辑判断"""
 
-        if "红卒" in name1 and f_coord[1] <= d_coord[1]:
-            if f_coord[1] <= 226:
-                return False
-            else:
-                if f_coord[0] == d_coord[0] and f_coord[1] + CHESS_INTERVAL1 == d_coord[1]:
-                    self.no_go()
-                    return True
-                else:
-                    return False
-        else:
-            self.no_go()
-            print("yes")
+        if f_coord in FEASIBLE_COORD:
+            return True
+        return False
 
     def operate(self, flag, coord, old_coord, new_coord, un1_coord, un2_coord, eat, name1, name2):
         """棋子操作"""
@@ -419,8 +425,7 @@ class Game(object):
             self.update()
             coord.clear()
 
-        if flag and self.logic(name1, old_coord, un1_coord[-1]):
-        # if flag:
+        if flag and self.logic(un1_coord[-1]):
             bg, b_chess, r_chess = self.img_load()
             chess_name = {"黑卒": b_chess[0], "黑炮": b_chess[1], "黑车": b_chess[2], "黑马": b_chess[3],
                           "黑象": b_chess[4], "黑士": b_chess[5], "黑将": b_chess[6],
@@ -428,14 +433,17 @@ class Game(object):
                           "红象": r_chess[4], "红士": r_chess[5], "红将": r_chess[6]}
             for name in chess_name.keys():
                 if name in name1:
+                    self.no_go()
                     blit1(chess_name[name])
         else:
-            return
+            return False
 
     def event(self):
         """事件判断"""
 
         click_coord = []
+        midpoint = []
+        name = None 
         bg, b_chess, r_chess = self.img_load()
         while True:
             time.sleep(0.001)
@@ -450,7 +458,9 @@ class Game(object):
                             self.click1 = event.pos
                             if len(click_coord):
                                 self.window.blit(bg[3], click_coord[-1])
-                            for old_coord, new_coord in zip(INIT_COORD, INIT_RANGER):
+                            if len(FEASIBLE_COORD):
+                                FEASIBLE_COORD.clear()
+                            for n, old_coord, new_coord in zip(CHESS_NAME, INIT_COORD, INIT_RANGER):
                                 old_x = old_coord[0]
                                 old_y = old_coord[1]
                                 new_x = new_coord[0]
@@ -458,9 +468,26 @@ class Game(object):
                                 click1_x = event.pos[0]
                                 click1_y = event.pos[1]
                                 if old_x <= click1_x <= new_x and old_y <= click1_y <= new_y:
+                                    name = n
                                     click_coord.append(old_coord)
                                     self.window.blit(bg[2], old_coord)
                                     self.update()
+                            ALL_COORD = INIT_COORD + UNPLACED_COORD
+                            for coord in ALL_COORD:
+                                self.show_dot(name, click_coord[-1], coord)
+                            """for dot_coord in FEASIBLE_COORD:
+                                dot_x = dot_coord[0] + CHESS_INTERVAL1
+                                dot_y = dot_coord[1] + CHESS_INTERVAL1
+                                point_x = (dot_coord[0] + dot_x) / 2 - 7
+                                point_y = (dot_coord[1] + dot_y) / 2 - 7
+                                midpoint.append((point_x, point_y))
+                            for point in midpoint:
+                                init_x = point[0] - 5
+                                init_y = point[1] - 5
+                                print(init_x, init_y)
+                                self.window.blit(self.dot, (init_x, init_y))
+                                self.update()"""
+                                
                         else:
                             self.click2 = event.pos
                             self.click_1(self.click1, self.click2)
