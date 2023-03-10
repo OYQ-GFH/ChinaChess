@@ -44,6 +44,7 @@ class Game(object):
     red = True
     black = False
     index = 0
+
     chess_left_x = []
     chess_left_y = None
     chess_right_x = []
@@ -52,6 +53,7 @@ class Game(object):
     chess_up_y = []
     chess_down_x = None
     chess_down_y = []
+    name = None
 
     def __init__(self):
         pygame.init()
@@ -375,7 +377,12 @@ class Game(object):
             self.red = True
 
     def show_dot(self, name1, d_coord, all_coord):
-        """显示点击棋子可以走的点"""
+        """计算棋子可以走的点位"""
+
+        def find_name(coord):
+            for key, value in CHESS_INIT.items():
+                if coord == value:
+                    return key
 
         if "红卒" in name1 and all_coord[1] <= d_coord[1]:
             if d_coord[1] <= 226:
@@ -409,23 +416,83 @@ class Game(object):
                             FEASIBLE_COORD.append(all_coord)
 
                 elif all_coord[0] > d_coord[0]:
-                    pass
+                    if all_coord in INIT_COORD:
+                        self.chess_right_x.append(all_coord[0])
+                        self.chess_right_x.sort()
+                        self.chess_right_y = all_coord[1]
+                    else:
+                        if self.chess_right_x and all_coord[0] < self.chess_right_x[0]:
+                            FEASIBLE_COORD.append(all_coord)
+                        elif not self.chess_right_x and d_coord[0] < all_coord[0]:
+                            FEASIBLE_COORD.append(all_coord)
+
                 elif all_coord[1] < d_coord[1]:
                     if all_coord in INIT_COORD:
                         self.chess_up_x = all_coord[0]
                         self.chess_up_y.append(all_coord[1])
                         self.chess_up_y.sort(reverse=True)
                     else:
-                        print(self.chess_up_y)
                         if self.chess_up_y and self.chess_up_y[0] < all_coord[1]:
+                            FEASIBLE_COORD.append(all_coord)
+                        elif not self.chess_up_y and all_coord[1] < d_coord[1]:
                             FEASIBLE_COORD.append(all_coord)
 
                 elif all_coord[1] > d_coord[1]:
-                    pass
+                    if all_coord in INIT_COORD:
+                        self.chess_down_x = all_coord[0]
+                        self.chess_down_y.append(all_coord[1])
+                        self.chess_down_y.sort()
+                    else:
+                        if self.chess_down_y and all_coord[1] < self.chess_down_y[0]:
+                            FEASIBLE_COORD.append(all_coord)
+                        elif not self.chess_down_y and d_coord[1] < all_coord[1]:
+                            FEASIBLE_COORD.append(all_coord)
 
+        elif "黑炮" in name1:
+            if (d_coord[0] == all_coord[0] or d_coord[1] == all_coord[1]) and d_coord != all_coord:
+                if all_coord[0] < d_coord[0]:
+                    if all_coord in INIT_COORD:
+                        self.chess_left_x.append(all_coord[0])
+                        self.chess_left_x.sort(reverse=True)
+                        self.chess_left_y = all_coord[1]
+                    else:
+                        if self.chess_left_x and self.chess_left_x[0] < all_coord[0]:
+                            FEASIBLE_COORD.append(all_coord)
+                        elif not self.chess_left_x and all_coord[0] < d_coord[0]:
+                            FEASIBLE_COORD.append(all_coord)
 
+                elif all_coord[0] > d_coord[0]:
+                    if all_coord in INIT_COORD:
+                        self.chess_right_x.append(all_coord[0])
+                        self.chess_right_x.sort()
+                        self.chess_right_y = all_coord[1]
+                    else:
+                        if self.chess_right_x and all_coord[0] < self.chess_right_x[0]:
+                            FEASIBLE_COORD.append(all_coord)
+                        elif not self.chess_right_x and d_coord[0] < all_coord[0]:
+                            FEASIBLE_COORD.append(all_coord)
 
+                elif all_coord[1] < d_coord[1]:
+                    if all_coord in INIT_COORD:
+                        self.chess_up_x = all_coord[0]
+                        self.chess_up_y.append(all_coord[1])
+                        self.chess_up_y.sort(reverse=True)
+                    else:
+                        if self.chess_up_y and self.chess_up_y[0] < all_coord[1]:
+                            FEASIBLE_COORD.append(all_coord)
+                        elif not self.chess_up_y and all_coord[1] < d_coord[1]:
+                            FEASIBLE_COORD.append(all_coord)
 
+                elif all_coord[1] > d_coord[1]:
+                    if all_coord in INIT_COORD:
+                        self.chess_down_x = all_coord[0]
+                        self.chess_down_y.append(all_coord[1])
+                        self.chess_down_y.sort()
+                    else:
+                        if self.chess_down_y and all_coord[1] < self.chess_down_y[0]:
+                            FEASIBLE_COORD.append(all_coord)
+                        elif not self.chess_down_y and d_coord[1] < all_coord[1]:
+                            FEASIBLE_COORD.append(all_coord)
         else:
             pass
 
@@ -549,6 +616,7 @@ class Game(object):
                                 CHESS_INIT[n] = old_coord
                                 if old_x <= click1_x <= new_x and old_y <= click1_y <= new_y:
                                     name = n
+                                    self.name = n
                                     click_coord.append(old_coord)
                                     self.window.blit(bg[2], old_coord)
                                     self.update()
@@ -557,9 +625,16 @@ class Game(object):
                                 self.show_dot(name, click_coord[-1], coord)
                             if len(self.chess_left_x) >= 2:
                                 FEASIBLE_COORD.append((self.chess_left_x[1], self.chess_left_y))
+                            if len(self.chess_right_x) >= 2:
+                                FEASIBLE_COORD.append((self.chess_right_x[1], self.chess_right_y))
                             if len(self.chess_up_y) >= 2:
                                 FEASIBLE_COORD.append((self.chess_up_x, self.chess_up_y[1]))
-                            print(FEASIBLE_COORD)
+                            if len(self.chess_down_y) >= 2:
+                                FEASIBLE_COORD.append((self.chess_down_x, self.chess_down_y[1]))
+                            for key, value in CHESS_INIT.items():
+                                if value in FEASIBLE_COORD:
+                                    if self.name[0] == key[0]:
+                                        FEASIBLE_COORD.remove(value)
                             for a in FEASIBLE_COORD:
                                 self.window.blit(self.dot, a)
                                 self.update()
