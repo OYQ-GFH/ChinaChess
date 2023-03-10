@@ -1,3 +1,35 @@
+# 
+#           _.._        ,------------.
+#        ,'      `.    ( We want you! )
+#       /  __) __` \    `-,----------'
+#      (  (`-`(-')  ) _.-'
+#      /)  \  = /  (
+#     /'    |--' .  \
+#    (  ,---|  `-.)__`
+#     )(  `-.,--'   _`-.
+#    '/,'          (  Uu",
+#      (_       ,    `/,-' )
+#       `.__,  : `-'/  /`--'
+#        |     `--'  |
+#        `   `-._   /
+#         \        (
+#         /\ .      \.
+#        / |` \     ,-\
+#       /  \| .)   /   \
+#      ( ,'|\    ,'     :
+#      | \,`.`--"/      }
+#      `,'    \  |,'    /
+#     / "-._   `-/      |
+#     "-.   "-.,'|     ;
+#    /        _/["---'""]
+#   :        /  |"-     '
+#   '           |      /
+#               `      |
+#
+# author: OYQ
+# write_date: 2023.2.28
+#
+
 import sys
 import time
 import pygame
@@ -12,8 +44,14 @@ class Game(object):
     red = True
     black = False
     index = 0
-    chess_x = []
-    chess_y = []
+    chess_left_x = []
+    chess_left_y = None
+    chess_right_x = []
+    chess_right_y = None
+    chess_up_x = None
+    chess_up_y = []
+    chess_down_x = None
+    chess_down_y = []
 
     def __init__(self):
         pygame.init()
@@ -54,7 +92,7 @@ class Game(object):
         r_s = pygame.image.load("images/r_s.png")
         r_j = pygame.image.load("images/r_j.png")
         return (bg1, bg2, r_box, b_box), (b_z, b_p, b_c, b_m, b_x, b_s, b_j), (r_z, r_p, r_c, r_m, r_x, r_s, r_j)
-    
+
     @staticmethod
     def chess_coord():
         """计算坐标"""
@@ -335,44 +373,58 @@ class Game(object):
             pygame.display.set_icon(self.ico1)
             self.black = False
             self.red = True
-    
+
     def show_dot(self, name1, d_coord, all_coord):
         """显示点击棋子可以走的点"""
-        
+
         if "红卒" in name1 and all_coord[1] <= d_coord[1]:
             if d_coord[1] <= 226:
-                if (d_coord[0] - CHESS_INTERVAL1 == all_coord[0] and d_coord[1] == all_coord[1]) or (d_coord[0] + CHESS_INTERVAL1 == all_coord[0] and d_coord[1] == all_coord[1]) or (d_coord[0] == all_coord[0] and d_coord[1] - CHESS_INTERVAL1 == all_coord[1]):
+                if (d_coord[0] - CHESS_INTERVAL1 == all_coord[0] and d_coord[1] == all_coord[1]) or (
+                        d_coord[0] + CHESS_INTERVAL1 == all_coord[0] and d_coord[1] == all_coord[1]) or (
+                        d_coord[0] == all_coord[0] and d_coord[1] - CHESS_INTERVAL1 == all_coord[1]):
                     FEASIBLE_COORD.append(all_coord)
             elif all_coord[0] == d_coord[0] and d_coord[1] - CHESS_INTERVAL1 == all_coord[1]:
                 FEASIBLE_COORD.append(all_coord)
 
         elif "黑卒" in name1 and all_coord[1] >= d_coord[1]:
             if d_coord[1] >= 282:
-                if (d_coord[0] - CHESS_INTERVAL1 == all_coord[0] and d_coord[1] == all_coord[1]) or (d_coord[0] + CHESS_INTERVAL1 == all_coord[0] and d_coord[1] == all_coord[1]) or (d_coord[0] == all_coord[0] and d_coord[1] + CHESS_INTERVAL1 == all_coord[1]):
+                if (d_coord[0] - CHESS_INTERVAL1 == all_coord[0] and d_coord[1] == all_coord[1]) or (
+                        d_coord[0] + CHESS_INTERVAL1 == all_coord[0] and d_coord[1] == all_coord[1]) or (
+                        d_coord[0] == all_coord[0] and d_coord[1] + CHESS_INTERVAL1 == all_coord[1]):
                     FEASIBLE_COORD.append(all_coord)
             elif all_coord[0] == d_coord[0] and d_coord[1] + CHESS_INTERVAL1 == all_coord[1]:
                 FEASIBLE_COORD.append(all_coord)
-        
+
         elif "红炮" in name1:
             if (d_coord[0] == all_coord[0] or d_coord[1] == all_coord[1]) and d_coord != all_coord:
                 if all_coord[0] < d_coord[0]:
-                    pass
-                if all_coord[0] > d_coord[0]:
-                    pass
-                if all_coord[1] < d_coord[1]:
                     if all_coord in INIT_COORD:
-                        self.chess_x.append(all_coord[0])
-                        self.chess_y.append(all_coord[1])
-                        if len(self.chess_y) >= 2:
-                            self.chess_x.sort(reverse=True)
-                            self.chess_y.sort(reverse=True)
-                            FEASIBLE_COORD.append((self.chess_x[1], self.chess_y[1]))
+                        self.chess_left_x.append(all_coord[0])
+                        self.chess_left_x.sort(reverse=True)
+                        self.chess_left_y = all_coord[1]
                     else:
-                        if self.chess_y[0] < all_coord[1]:
+                        if self.chess_left_x and self.chess_left_x[0] < all_coord[0]:
                             FEASIBLE_COORD.append(all_coord)
-                            
-                if all_coord[1] > d_coord[1]:
+                        elif not self.chess_left_x and all_coord[0] < d_coord[0]:
+                            FEASIBLE_COORD.append(all_coord)
+
+                elif all_coord[0] > d_coord[0]:
                     pass
+                elif all_coord[1] < d_coord[1]:
+                    if all_coord in INIT_COORD:
+                        self.chess_up_x = all_coord[0]
+                        self.chess_up_y.append(all_coord[1])
+                        self.chess_up_y.sort(reverse=True)
+                    else:
+                        print(self.chess_up_y)
+                        if self.chess_up_y and self.chess_up_y[0] < all_coord[1]:
+                            FEASIBLE_COORD.append(all_coord)
+
+                elif all_coord[1] > d_coord[1]:
+                    pass
+
+
+
 
         else:
             pass
@@ -466,7 +518,7 @@ class Game(object):
 
         click_coord = []
         midpoint = []
-        name = None 
+        name = None
         bg, b_chess, r_chess = self.img_load()
         while True:
             time.sleep(0.001)
@@ -483,8 +535,10 @@ class Game(object):
                                 self.window.blit(bg[3], click_coord[-1])
                             if len(FEASIBLE_COORD):
                                 FEASIBLE_COORD.clear()
-                                self.chess_x.clear()
-                                self.chess_y.clear()
+                                self.chess_left_x.clear()
+                                self.chess_right_x.clear()
+                                self.chess_up_y.clear()
+                                self.chess_down_y.clear()
                             for n, old_coord, new_coord in zip(CHESS_NAME, INIT_COORD, INIT_RANGER):
                                 old_x = old_coord[0]
                                 old_y = old_coord[1]
@@ -498,11 +552,17 @@ class Game(object):
                                     click_coord.append(old_coord)
                                     self.window.blit(bg[2], old_coord)
                                     self.update()
-                            ALL_COORD = INIT_COORD + UNPLACED_COORD
-                            for coord in ALL_COORD:
+                            all_coord = INIT_COORD + UNPLACED_COORD
+                            for coord in all_coord:
                                 self.show_dot(name, click_coord[-1], coord)
-                            print(self.chess_y)
+                            if len(self.chess_left_x) >= 2:
+                                FEASIBLE_COORD.append((self.chess_left_x[1], self.chess_left_y))
+                            if len(self.chess_up_y) >= 2:
+                                FEASIBLE_COORD.append((self.chess_up_x, self.chess_up_y[1]))
                             print(FEASIBLE_COORD)
+                            for a in FEASIBLE_COORD:
+                                self.window.blit(self.dot, a)
+                                self.update()
                             """for dot_coord in FEASIBLE_COORD:
                                 dot_x = dot_coord[0] + CHESS_INTERVAL1
                                 dot_y = dot_coord[1] + CHESS_INTERVAL1
@@ -515,7 +575,7 @@ class Game(object):
                                 print(init_x, init_y)
                                 self.window.blit(self.dot, (init_x, init_y))
                                 self.update()"""
-                                
+
                         else:
                             self.click2 = event.pos
                             self.click_1(self.click1, self.click2)
