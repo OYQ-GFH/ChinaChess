@@ -13,8 +13,9 @@ CHESS_Y = 2
 CHESS_INTERVAL1 = 56
 CHESS_STATE = {}
 NAME = []
-ALL_COORD = []
 FEASIBLE_COORD = []
+CHESS_INIT = {}
+
 
 if __name__ == "__main__":
     pass
