@@ -1,3 +1,7 @@
+import os
+import random
+
+
 WINDOW_SIZE = (756, 560)
 WINDOW_TITLE = "中国象棋"
 CHESS_NAME = []
@@ -15,6 +19,27 @@ CHESS_STATE = {}
 NAME = []
 FEASIBLE_COORD = []
 CHESS_INIT = {}
+
+
+def random_num():
+    """计算7个随机数"""
+
+    musics = os.listdir("./musics")
+    all_bgm = []
+    num_list = []
+
+    for music in musics:
+        if "bgm" in music:
+            all_bgm.append(music)
+
+    index = len(all_bgm)
+    for i in range(1, 10000):
+        num = random.randint(0, index - 1)
+        if num not in num_list:
+            num_list.append(num)
+        if len(num_list) == index:
+            return all_bgm, num_list, index
+    return all_bgm, num_list, index
 
 
 def count_init_coord():
