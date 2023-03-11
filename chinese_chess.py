@@ -64,12 +64,12 @@ class Game(object):
         pygame.init()
         pygame.mixer.init()
         # 初始化音效
-        pygame.mixer.music.load("./musics/start.mp3")
         self.move = pygame.mixer.Sound("musics/move.WAV")
         self.eat = pygame.mixer.Sound("./musics/eat.WAV")
         self.move.set_volume(1)
         self.eat.set_volume(1)
-        pygame.mixer.music.set_volume(1)
+        pygame.mixer.music.load("./musics/start.mp3")
+        pygame.mixer.music.set_volume(0.5)
         pygame.mixer.music.play()
         # 初始化窗口
         pygame.display.set_caption(WINDOW_TITLE)
@@ -402,13 +402,17 @@ class Game(object):
         """事件判断"""
 
         name = None
-
         while True:
             time.sleep(0.001)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        sys.exit()
+
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
                         if self.click1 is None:
@@ -447,6 +451,7 @@ class Game(object):
                                     if len(self.chess_down_y) >= 2:
                                         FEASIBLE_COORD.append((self.chess_down_x, self.chess_down_y[1]))
                                 elif "车" in self.name:
+                                    print(self.chess_left_x)
                                     if len(self.chess_left_x) >= 1:
                                         FEASIBLE_COORD.append((self.chess_left_x[0], self.chess_left_y))
                                     if len(self.chess_right_x) >= 1:
@@ -455,12 +460,20 @@ class Game(object):
                                         FEASIBLE_COORD.append((self.chess_up_x, self.chess_up_y[0]))
                                     if len(self.chess_down_y) >= 1:
                                         FEASIBLE_COORD.append((self.chess_down_x, self.chess_down_y[0]))
-                                for key, value in CHESS_INIT.items():
-                                    if value in FEASIBLE_COORD:
-                                        if self.name[0] == key[0]:
-                                            FEASIBLE_COORD.remove(value)
-                                for a in FEASIBLE_COORD:
-                                    self.window.blit(self.dot, a)
+                                if not self.go:
+                                    for key, value in CHESS_INIT.items():
+                                        if value in FEASIBLE_COORD:
+                                            if self.name[0] == key[0]:
+                                                print(self.name)
+                                                FEASIBLE_COORD.remove(value)
+                                elif self.go:
+                                    for key, value in CHESS_STATE.items():
+                                        if value in FEASIBLE_COORD:
+                                            if self.name[0] == key[0]:
+                                                print(self.name)
+                                                FEASIBLE_COORD.remove(value)
+                                for a_coord in FEASIBLE_COORD:
+                                    self.window.blit(self.dot, a_coord)
                                 self.update()
 
                         else:
@@ -486,53 +499,26 @@ class Game(object):
                             self.update()
 
             if not pygame.mixer.music.get_busy():
+                all_music, num_list, index = random_num()
+                music = all_music[num_list[self.index]]
+                if self.index <= index:
+                    self.play_music(music)
+                else:
+                    self.index = 0
+                    self.play_music(music)
                 self.index += 1
-                self.play_music()
 
     @staticmethod
     def update():
         pygame.display.update()
 
-    def play_music(self):
+    @staticmethod
+    def play_music(music):
         """播放音频"""
 
-        def play1():
-            pygame.mixer.music.load("./musics/bgm1.mp3")
-            pygame.mixer.music.set_volume(0.3)
-            pygame.mixer.music.play()
-
-        def play2():
-            pygame.mixer.music.load("./musics/bgm2.mp3")
-            pygame.mixer.music.set_volume(0.3)
-            pygame.mixer.music.play()
-
-        def play3():
-            pygame.mixer.music.load("./musics/bgm3.mp3")
-            pygame.mixer.music.set_volume(0.3)
-            pygame.mixer.music.play()
-
-        def play4():
-            pygame.mixer.music.load("./musics/bgm4.mp3")
-            pygame.mixer.music.set_volume(0.3)
-            pygame.mixer.music.play()
-
-        def play5():
-            pygame.mixer.music.load("./musics/bgm5.flac")
-            pygame.mixer.music.set_volume(0.3)
-            pygame.mixer.music.play()
-
-        if self.index == 1:
-            play1()
-        elif self.index == 2:
-            play2()
-        elif self.index == 3:
-            play3()
-        elif self.index == 4:
-            play4()
-        elif self.index == 5:
-            play5()
-        else:
-            self.index = 0
+        pygame.mixer.music.load("./musics/{}".format(music))
+        pygame.mixer.music.set_volume(0.5)
+        pygame.mixer.music.play()
 
 
 if __name__ == "__main__":
