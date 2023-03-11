@@ -44,251 +44,108 @@ class Game(object):
     red = True
     black = False
     index = 0
-
     chess_left_x = []
-    chess_left_y = None
     chess_right_x = []
+    chess_up_y = []
+    chess_down_y = []
+    chess_left_y = None
     chess_right_y = None
     chess_up_x = None
-    chess_up_y = []
     chess_down_x = None
-    chess_down_y = []
     name = None
+    start_click_coord = None
+    old_click_coord = None
+    end_click_coord = None
+    go = False
 
     def __init__(self):
+        """初始化"""
+
         pygame.init()
         pygame.mixer.init()
+        # 初始化音效
         pygame.mixer.music.load("./musics/start.mp3")
-        self.ico1 = pygame.image.load("./images/ico1.png")
-        self.ico2 = pygame.image.load("./images/b_j.png")
-        self.dot = pygame.image.load("./images/dot.png")
-        self.window = pygame.display.set_mode(WINDOW_SIZE)
-        pygame.display.set_caption(WINDOW_TITLE)
         self.move = pygame.mixer.Sound("musics/move.WAV")
         self.eat = pygame.mixer.Sound("./musics/eat.WAV")
         self.move.set_volume(1)
         self.eat.set_volume(1)
         pygame.mixer.music.set_volume(1)
         pygame.mixer.music.play()
-
-    @staticmethod
-    def img_load():
-        """加载棋盘和棋子素材"""
-
-        bg1 = pygame.image.load("images/bg1.png")
-        bg2 = pygame.image.load("images/bg3.png")
-        r_box = pygame.image.load("images/r_box.png")
-        b_box = pygame.image.load("images/b_box.png")
-        b_z = pygame.image.load("images/b_z.png")
-        b_p = pygame.image.load("images/b_p.png")
-        b_c = pygame.image.load("images/b_c.png")
-        b_m = pygame.image.load("images/b_m.png")
-        b_x = pygame.image.load("images/b_x.png")
-        b_s = pygame.image.load("images/b_s.png")
-        b_j = pygame.image.load("images/b_j.png")
-        r_z = pygame.image.load("images/r_z.png")
-        r_p = pygame.image.load("images/r_p.png")
-        r_c = pygame.image.load("images/r_c.png")
-        r_m = pygame.image.load("images/r_m.png")
-        r_x = pygame.image.load("images/r_x.png")
-        r_s = pygame.image.load("images/r_s.png")
-        r_j = pygame.image.load("images/r_j.png")
-        return (bg1, bg2, r_box, b_box), (b_z, b_p, b_c, b_m, b_x, b_s, b_j), (r_z, r_p, r_c, r_m, r_x, r_s, r_j)
-
-    @staticmethod
-    def chess_coord():
-        """计算坐标"""
-
-        # 计算所有棋子初始防置坐标
-        initialize_coord = {
-            # 黑棋
-            "黑车1": (CHESS_X, CHESS_Y),
-            "黑马1": (CHESS_INTERVAL1 + CHESS_X, CHESS_Y),
-            "黑象1": (CHESS_INTERVAL1 * 2 + CHESS_X, CHESS_Y),
-            "黑士1": (CHESS_INTERVAL1 * 3 + CHESS_X, CHESS_Y),
-            "黑将": (CHESS_INTERVAL1 * 4 + CHESS_X, CHESS_Y),
-            "黑士2": (CHESS_INTERVAL1 * 5 + CHESS_X, CHESS_Y),
-            "黑象2": (CHESS_INTERVAL1 * 6 + CHESS_X, CHESS_Y),
-            "黑马2": (CHESS_INTERVAL1 * 7 + CHESS_X, CHESS_Y),
-            "黑车2": (CHESS_INTERVAL1 * 8 + CHESS_X, CHESS_Y),
-            "黑炮1": (CHESS_INTERVAL1 + CHESS_X, CHESS_INTERVAL1 * 2 + CHESS_Y),
-            "黑炮2": (CHESS_INTERVAL1 * 7 + CHESS_X, CHESS_INTERVAL1 * 2 + CHESS_Y),
-            "黑卒1": (CHESS_X, CHESS_INTERVAL1 * 3 + CHESS_Y),
-            "黑卒2": (CHESS_INTERVAL1 * 2 + CHESS_X, CHESS_INTERVAL1 * 3 + CHESS_Y),
-            "黑卒3": (CHESS_INTERVAL1 * 4 + CHESS_X, CHESS_INTERVAL1 * 3 + CHESS_Y),
-            "黑卒4": (CHESS_INTERVAL1 * 6 + CHESS_X, CHESS_INTERVAL1 * 3 + CHESS_Y),
-            "黑卒5": (CHESS_INTERVAL1 * 8 + CHESS_X, CHESS_INTERVAL1 * 3 + CHESS_Y),
-            # 红棋
-            "红车1": (CHESS_X, CHESS_INTERVAL1 * 9 + CHESS_Y),
-            "红马1": (CHESS_INTERVAL1 + CHESS_X, CHESS_INTERVAL1 * 9 + CHESS_Y),
-            "红象1": (CHESS_INTERVAL1 * 2 + CHESS_X, CHESS_INTERVAL1 * 9 + CHESS_Y),
-            "红士1": (CHESS_INTERVAL1 * 3 + CHESS_X, CHESS_INTERVAL1 * 9 + CHESS_Y),
-            "红将": (CHESS_INTERVAL1 * 4 + CHESS_X, CHESS_INTERVAL1 * 9 + CHESS_Y),
-            "红士2": (CHESS_INTERVAL1 * 5 + CHESS_X, CHESS_INTERVAL1 * 9 + CHESS_Y),
-            "红象2": (CHESS_INTERVAL1 * 6 + CHESS_X, CHESS_INTERVAL1 * 9 + CHESS_Y),
-            "红马2": (CHESS_INTERVAL1 * 7 + CHESS_X, CHESS_INTERVAL1 * 9 + CHESS_Y),
-            "红车2": (CHESS_INTERVAL1 * 8 + CHESS_X, CHESS_INTERVAL1 * 9 + CHESS_Y),
-            "红炮1": (CHESS_INTERVAL1 + CHESS_X, CHESS_INTERVAL1 * 7 + CHESS_Y),
-            "红炮2": (CHESS_INTERVAL1 * 7 + CHESS_X, CHESS_INTERVAL1 * 7 + CHESS_Y),
-            "红卒1": (CHESS_X, CHESS_INTERVAL1 * 6 + CHESS_Y),
-            "红卒2": (CHESS_INTERVAL1 * 2 + CHESS_X, CHESS_INTERVAL1 * 6 + CHESS_Y),
-            "红卒3": (CHESS_INTERVAL1 * 4 + CHESS_X, CHESS_INTERVAL1 * 6 + CHESS_Y),
-            "红卒4": (CHESS_INTERVAL1 * 6 + CHESS_X, CHESS_INTERVAL1 * 6 + CHESS_Y),
-            "红卒5": (CHESS_INTERVAL1 * 8 + CHESS_X, CHESS_INTERVAL1 * 6 + CHESS_Y)}
-
-        # 计算所有棋子初始未放置坐标
-        unplaced_coord = [
-            # 第一列
-            (CHESS_X, CHESS_INTERVAL1 + CHESS_Y),
-            (CHESS_X, CHESS_INTERVAL1 * 2 + CHESS_Y),
-            (CHESS_X, CHESS_INTERVAL1 * 4 + CHESS_Y),
-            (CHESS_X, CHESS_INTERVAL1 * 5 + CHESS_Y),
-            (CHESS_X, CHESS_INTERVAL1 * 7 + CHESS_Y),
-            (CHESS_X, CHESS_INTERVAL1 * 8 + CHESS_Y),
-            # 第二列
-            (CHESS_INTERVAL1 + CHESS_X, CHESS_INTERVAL1 + CHESS_Y),
-            (CHESS_INTERVAL1 + CHESS_X, CHESS_INTERVAL1 * 3 + CHESS_Y),
-            (CHESS_INTERVAL1 + CHESS_X, CHESS_INTERVAL1 * 4 + CHESS_Y),
-            (CHESS_INTERVAL1 + CHESS_X, CHESS_INTERVAL1 * 5 + CHESS_Y),
-            (CHESS_INTERVAL1 + CHESS_X, CHESS_INTERVAL1 * 6 + CHESS_Y),
-            (CHESS_INTERVAL1 + CHESS_X, CHESS_INTERVAL1 * 8 + CHESS_Y),
-            # 第三列
-            (CHESS_INTERVAL1 * 2 + CHESS_X, CHESS_INTERVAL1 + CHESS_Y),
-            (CHESS_INTERVAL1 * 2 + CHESS_X, CHESS_INTERVAL1 * 2 + CHESS_Y),
-            (CHESS_INTERVAL1 * 2 + CHESS_X, CHESS_INTERVAL1 * 4 + CHESS_Y),
-            (CHESS_INTERVAL1 * 2 + CHESS_X, CHESS_INTERVAL1 * 5 + CHESS_Y),
-            (CHESS_INTERVAL1 * 2 + CHESS_X, CHESS_INTERVAL1 * 7 + CHESS_Y),
-            (CHESS_INTERVAL1 * 2 + CHESS_X, CHESS_INTERVAL1 * 8 + CHESS_Y),
-            # 第四列
-            (CHESS_INTERVAL1 * 3 + CHESS_X, CHESS_INTERVAL1 + CHESS_Y),
-            (CHESS_INTERVAL1 * 3 + CHESS_X, CHESS_INTERVAL1 * 2 + CHESS_Y),
-            (CHESS_INTERVAL1 * 3 + CHESS_X, CHESS_INTERVAL1 * 3 + CHESS_Y),
-            (CHESS_INTERVAL1 * 3 + CHESS_X, CHESS_INTERVAL1 * 4 + CHESS_Y),
-            (CHESS_INTERVAL1 * 3 + CHESS_X, CHESS_INTERVAL1 * 5 + CHESS_Y),
-            (CHESS_INTERVAL1 * 3 + CHESS_X, CHESS_INTERVAL1 * 6 + CHESS_Y),
-            (CHESS_INTERVAL1 * 3 + CHESS_X, CHESS_INTERVAL1 * 7 + CHESS_Y),
-            (CHESS_INTERVAL1 * 3 + CHESS_X, CHESS_INTERVAL1 * 8 + CHESS_Y),
-            # 第五列
-            (CHESS_INTERVAL1 * 4 + CHESS_X, CHESS_INTERVAL1 + CHESS_Y),
-            (CHESS_INTERVAL1 * 4 + CHESS_X, CHESS_INTERVAL1 * 2 + CHESS_Y),
-            (CHESS_INTERVAL1 * 4 + CHESS_X, CHESS_INTERVAL1 * 4 + CHESS_Y),
-            (CHESS_INTERVAL1 * 4 + CHESS_X, CHESS_INTERVAL1 * 5 + CHESS_Y),
-            (CHESS_INTERVAL1 * 4 + CHESS_X, CHESS_INTERVAL1 * 7 + CHESS_Y),
-            (CHESS_INTERVAL1 * 4 + CHESS_X, CHESS_INTERVAL1 * 8 + CHESS_Y),
-            # 第六列
-            (CHESS_INTERVAL1 * 5 + CHESS_X, CHESS_INTERVAL1 + CHESS_Y),
-            (CHESS_INTERVAL1 * 5 + CHESS_X, CHESS_INTERVAL1 * 2 + CHESS_Y),
-            (CHESS_INTERVAL1 * 5 + CHESS_X, CHESS_INTERVAL1 * 3 + CHESS_Y),
-            (CHESS_INTERVAL1 * 5 + CHESS_X, CHESS_INTERVAL1 * 4 + CHESS_Y),
-            (CHESS_INTERVAL1 * 5 + CHESS_X, CHESS_INTERVAL1 * 5 + CHESS_Y),
-            (CHESS_INTERVAL1 * 5 + CHESS_X, CHESS_INTERVAL1 * 6 + CHESS_Y),
-            (CHESS_INTERVAL1 * 5 + CHESS_X, CHESS_INTERVAL1 * 7 + CHESS_Y),
-            (CHESS_INTERVAL1 * 5 + CHESS_X, CHESS_INTERVAL1 * 8 + CHESS_Y),
-            # 第七列
-            (CHESS_INTERVAL1 * 6 + CHESS_X, CHESS_INTERVAL1 + CHESS_Y),
-            (CHESS_INTERVAL1 * 6 + CHESS_X, CHESS_INTERVAL1 * 2 + CHESS_Y),
-            (CHESS_INTERVAL1 * 6 + CHESS_X, CHESS_INTERVAL1 * 4 + CHESS_Y),
-            (CHESS_INTERVAL1 * 6 + CHESS_X, CHESS_INTERVAL1 * 5 + CHESS_Y),
-            (CHESS_INTERVAL1 * 6 + CHESS_X, CHESS_INTERVAL1 * 7 + CHESS_Y),
-            (CHESS_INTERVAL1 * 6 + CHESS_X, CHESS_INTERVAL1 * 8 + CHESS_Y),
-            # 第八列
-            (CHESS_INTERVAL1 * 7 + CHESS_X, CHESS_INTERVAL1 + CHESS_Y),
-            (CHESS_INTERVAL1 * 7 + CHESS_X, CHESS_INTERVAL1 * 3 + CHESS_Y),
-            (CHESS_INTERVAL1 * 7 + CHESS_X, CHESS_INTERVAL1 * 4 + CHESS_Y),
-            (CHESS_INTERVAL1 * 7 + CHESS_X, CHESS_INTERVAL1 * 5 + CHESS_Y),
-            (CHESS_INTERVAL1 * 7 + CHESS_X, CHESS_INTERVAL1 * 6 + CHESS_Y),
-            (CHESS_INTERVAL1 * 7 + CHESS_X, CHESS_INTERVAL1 * 8 + CHESS_Y),
-            # 第九列
-            (CHESS_INTERVAL1 * 8 + CHESS_X, CHESS_INTERVAL1 + CHESS_Y),
-            (CHESS_INTERVAL1 * 8 + CHESS_X, CHESS_INTERVAL1 * 2 + CHESS_Y),
-            (CHESS_INTERVAL1 * 8 + CHESS_X, CHESS_INTERVAL1 * 4 + CHESS_Y),
-            (CHESS_INTERVAL1 * 8 + CHESS_X, CHESS_INTERVAL1 * 5 + CHESS_Y),
-            (CHESS_INTERVAL1 * 8 + CHESS_X, CHESS_INTERVAL1 * 7 + CHESS_Y),
-            (CHESS_INTERVAL1 * 8 + CHESS_X, CHESS_INTERVAL1 * 8 + CHESS_Y)]
-
-        keys = initialize_coord.keys()
-        values = initialize_coord.values()
-        for chess_name, init_coord in zip(keys, values):
-            CHESS_NAME.append(chess_name)
-            INIT_COORD.append(init_coord)
-        for a in unplaced_coord:
-            UNPLACED_COORD.append(a)
-
-        # 计算棋子初始范围坐标
-        for coord in INIT_COORD:
-            init_x = coord[0] + CHESS_INTERVAL1
-            init_y = coord[1] + CHESS_INTERVAL1
-            INIT_RANGER.append((init_x, init_y))
-        # 计算剩余未放置棋子初始范围坐标
-        for a_coord in UNPLACED_COORD:
-            un_x = a_coord[0] + CHESS_INTERVAL1
-            un_y = a_coord[1] + CHESS_INTERVAL1
-            UNPLACED_RANGER.append((un_x, un_y))
-        # 计算棋盘上棋子可点击的坐标
-        all_x = []
-        all_y = []
-        chess_x = 149
-        chess_y = 23
-        for a_x in range(0, 9):
-            all_x.append(chess_x)
-            chess_x += 57
-        for a_y in range(0, 10):
-            all_y.append(chess_y)
-            chess_y += 57
-        for y in all_y:
-            for x in all_x:
-                MIDPOINT.append((x, y))
-        # 计算棋盘上棋子可点击的坐标范围
-        for mt_coord in MIDPOINT:
-            mt_x = mt_coord[0]
-            mt_y = mt_coord[1]
-            min_x1 = mt_x - 15
-            min_y1 = mt_y - 15
-            max_x2 = mt_x + 15
-            max_y2 = mt_y + 15
-            MIN_COORD.append((min_x1, min_y1))
-            MAX_COORD.append((max_x2, max_y2))
+        # 初始化窗口
+        pygame.display.set_caption(WINDOW_TITLE)
+        self.window = pygame.display.set_mode(WINDOW_SIZE)
+        # 初始化图片素材
+        self.ico1 = pygame.image.load("./images/ico1.png")
+        self.ico2 = pygame.image.load("./images/b_j.png")
+        self.r_box = pygame.image.load("images/r_box.png")
+        self.b_box = pygame.image.load("images/b_box.png")
+        self.dot = pygame.image.load("./images/dot.png")
+        self.bg1 = pygame.image.load("images/bg1.png")
+        self.bg2 = pygame.image.load("images/bg3.png")
+        self.b_z = pygame.image.load("images/b_z.png")
+        self.b_p = pygame.image.load("images/b_p.png")
+        self.b_c = pygame.image.load("images/b_c.png")
+        self.b_m = pygame.image.load("images/b_m.png")
+        self.b_x = pygame.image.load("images/b_x.png")
+        self.b_s = pygame.image.load("images/b_s.png")
+        self.b_j = pygame.image.load("images/b_j.png")
+        self.r_z = pygame.image.load("images/r_z.png")
+        self.r_p = pygame.image.load("images/r_p.png")
+        self.r_c = pygame.image.load("images/r_c.png")
+        self.r_m = pygame.image.load("images/r_m.png")
+        self.r_x = pygame.image.load("images/r_x.png")
+        self.r_s = pygame.image.load("images/r_s.png")
+        self.r_j = pygame.image.load("images/r_j.png")
+        self.bg = self.bg1, self.bg2
+        self.b_chess = self.b_z, self.b_p, self.b_c, self.b_m, self.b_x, self.b_s, self.b_j
+        self.r_chess = self.r_z, self.r_p, self.r_c, self.r_m, self.r_x, self.r_s, self.r_j
+        self.chess_name = {
+            "黑卒": self.b_chess[0], "黑炮": self.b_chess[1],
+            "黑车": self.b_chess[2], "黑马": self.b_chess[3],
+            "黑象": self.b_chess[4], "黑士": self.b_chess[5],
+            "黑将": self.b_chess[6], "红卒": self.r_chess[0],
+            "红炮": self.r_chess[1], "红车": self.r_chess[2],
+            "红马": self.r_chess[3], "红象": self.r_chess[4],
+            "红士": self.r_chess[5], "红将": self.r_chess[6]}
 
     def img_place(self):
         """放置棋盘和棋子"""
 
-        self.chess_coord()
-        bg, b_chess, r_chess = self.img_load()
-
-        self.window.blit(bg[1], (0, 0))
-        self.window.blit(bg[0], (128, 0))
-        self.window.blit(b_chess[2], INIT_COORD[0])
-        self.window.blit(b_chess[3], INIT_COORD[1])
-        self.window.blit(b_chess[4], INIT_COORD[2])
-        self.window.blit(b_chess[5], INIT_COORD[3])
-        self.window.blit(b_chess[6], INIT_COORD[4])
-        self.window.blit(b_chess[5], INIT_COORD[5])
-        self.window.blit(b_chess[4], INIT_COORD[6])
-        self.window.blit(b_chess[3], INIT_COORD[7])
-        self.window.blit(b_chess[2], INIT_COORD[8])
-        self.window.blit(b_chess[1], INIT_COORD[9])
-        self.window.blit(b_chess[1], INIT_COORD[10])
-        self.window.blit(b_chess[0], INIT_COORD[11])
-        self.window.blit(b_chess[0], INIT_COORD[12])
-        self.window.blit(b_chess[0], INIT_COORD[13])
-        self.window.blit(b_chess[0], INIT_COORD[14])
-        self.window.blit(b_chess[0], INIT_COORD[15])
-        self.window.blit(r_chess[2], INIT_COORD[16])
-        self.window.blit(r_chess[3], INIT_COORD[17])
-        self.window.blit(r_chess[4], INIT_COORD[18])
-        self.window.blit(r_chess[5], INIT_COORD[19])
-        self.window.blit(r_chess[6], INIT_COORD[20])
-        self.window.blit(r_chess[5], INIT_COORD[21])
-        self.window.blit(r_chess[4], INIT_COORD[22])
-        self.window.blit(r_chess[3], INIT_COORD[23])
-        self.window.blit(r_chess[2], INIT_COORD[24])
-        self.window.blit(r_chess[1], INIT_COORD[25])
-        self.window.blit(r_chess[1], INIT_COORD[26])
-        self.window.blit(r_chess[0], INIT_COORD[27])
-        self.window.blit(r_chess[0], INIT_COORD[28])
-        self.window.blit(r_chess[0], INIT_COORD[29])
-        self.window.blit(r_chess[0], INIT_COORD[30])
-        self.window.blit(r_chess[0], INIT_COORD[31])
+        count_init_coord()
+        self.window.blit(self.bg[1], (0, 0))
+        self.window.blit(self.bg[0], (128, 0))
+        self.window.blit(self.b_chess[2], INIT_COORD[0])
+        self.window.blit(self.b_chess[3], INIT_COORD[1])
+        self.window.blit(self.b_chess[4], INIT_COORD[2])
+        self.window.blit(self.b_chess[5], INIT_COORD[3])
+        self.window.blit(self.b_chess[6], INIT_COORD[4])
+        self.window.blit(self.b_chess[5], INIT_COORD[5])
+        self.window.blit(self.b_chess[4], INIT_COORD[6])
+        self.window.blit(self.b_chess[3], INIT_COORD[7])
+        self.window.blit(self.b_chess[2], INIT_COORD[8])
+        self.window.blit(self.b_chess[1], INIT_COORD[9])
+        self.window.blit(self.b_chess[1], INIT_COORD[10])
+        self.window.blit(self.b_chess[0], INIT_COORD[11])
+        self.window.blit(self.b_chess[0], INIT_COORD[12])
+        self.window.blit(self.b_chess[0], INIT_COORD[13])
+        self.window.blit(self.b_chess[0], INIT_COORD[14])
+        self.window.blit(self.b_chess[0], INIT_COORD[15])
+        self.window.blit(self.r_chess[2], INIT_COORD[16])
+        self.window.blit(self.r_chess[3], INIT_COORD[17])
+        self.window.blit(self.r_chess[4], INIT_COORD[18])
+        self.window.blit(self.r_chess[5], INIT_COORD[19])
+        self.window.blit(self.r_chess[6], INIT_COORD[20])
+        self.window.blit(self.r_chess[5], INIT_COORD[21])
+        self.window.blit(self.r_chess[4], INIT_COORD[22])
+        self.window.blit(self.r_chess[3], INIT_COORD[23])
+        self.window.blit(self.r_chess[2], INIT_COORD[24])
+        self.window.blit(self.r_chess[1], INIT_COORD[25])
+        self.window.blit(self.r_chess[1], INIT_COORD[26])
+        self.window.blit(self.r_chess[0], INIT_COORD[27])
+        self.window.blit(self.r_chess[0], INIT_COORD[28])
+        self.window.blit(self.r_chess[0], INIT_COORD[29])
+        self.window.blit(self.r_chess[0], INIT_COORD[30])
+        self.window.blit(self.r_chess[0], INIT_COORD[31])
 
     def click_1(self, click1, click2):
         """第一次点击"""
@@ -379,120 +236,83 @@ class Game(object):
     def show_dot(self, name1, d_coord, all_coord):
         """计算棋子可以走的点位"""
 
-        def find_name(coord):
-            for key, value in CHESS_INIT.items():
-                if coord == value:
-                    return key
+        def rule():
+            if (d_coord[0] == all_coord[0] or d_coord[1] == all_coord[1]) and d_coord != all_coord:
+                if all_coord[0] < d_coord[0]:
+                    if all_coord in INIT_COORD:
+                        self.chess_left_x.append(all_coord[0])
+                        self.chess_left_x.sort(reverse=True)
+                        self.chess_left_y = all_coord[1]
+                    else:
+                        if self.chess_left_x and self.chess_left_x[0] < all_coord[0]:
+                            FEASIBLE_COORD.append(all_coord)
+                        elif not self.chess_left_x and all_coord[0] < d_coord[0]:
+                            FEASIBLE_COORD.append(all_coord)
+
+                elif all_coord[0] > d_coord[0]:
+                    if all_coord in INIT_COORD:
+                        self.chess_right_x.append(all_coord[0])
+                        self.chess_right_x.sort()
+                        self.chess_right_y = all_coord[1]
+                    else:
+                        if self.chess_right_x and all_coord[0] < self.chess_right_x[0]:
+                            FEASIBLE_COORD.append(all_coord)
+                        elif not self.chess_right_x and d_coord[0] < all_coord[0]:
+                            FEASIBLE_COORD.append(all_coord)
+
+                elif all_coord[1] < d_coord[1]:
+                    if all_coord in INIT_COORD:
+                        self.chess_up_x = all_coord[0]
+                        self.chess_up_y.append(all_coord[1])
+                        self.chess_up_y.sort(reverse=True)
+                    else:
+                        if self.chess_up_y and self.chess_up_y[0] < all_coord[1]:
+                            FEASIBLE_COORD.append(all_coord)
+                        elif not self.chess_up_y and all_coord[1] < d_coord[1]:
+                            FEASIBLE_COORD.append(all_coord)
+
+                elif all_coord[1] > d_coord[1]:
+                    if all_coord in INIT_COORD:
+                        self.chess_down_x = all_coord[0]
+                        self.chess_down_y.append(all_coord[1])
+                        self.chess_down_y.sort()
+                    else:
+                        if self.chess_down_y and all_coord[1] < self.chess_down_y[0]:
+                            FEASIBLE_COORD.append(all_coord)
+                        elif not self.chess_down_y and d_coord[1] < all_coord[1]:
+                            FEASIBLE_COORD.append(all_coord)
 
         if "红卒" in name1 and all_coord[1] <= d_coord[1]:
             if d_coord[1] <= 226:
-                if (d_coord[0] - CHESS_INTERVAL1 == all_coord[0] and d_coord[1] == all_coord[1]) or (
-                        d_coord[0] + CHESS_INTERVAL1 == all_coord[0] and d_coord[1] == all_coord[1]) or (
-                        d_coord[0] == all_coord[0] and d_coord[1] - CHESS_INTERVAL1 == all_coord[1]):
+                if d_coord[0] - CHESS_INTERVAL1 == all_coord[0] and d_coord[1] == all_coord[1]:
+                    FEASIBLE_COORD.append(all_coord)
+                elif d_coord[0] + CHESS_INTERVAL1 == all_coord[0] and d_coord[1] == all_coord[1]:
+                    FEASIBLE_COORD.append(all_coord)
+                elif d_coord[0] == all_coord[0] and d_coord[1] - CHESS_INTERVAL1 == all_coord[1]:
                     FEASIBLE_COORD.append(all_coord)
             elif all_coord[0] == d_coord[0] and d_coord[1] - CHESS_INTERVAL1 == all_coord[1]:
                 FEASIBLE_COORD.append(all_coord)
 
         elif "黑卒" in name1 and all_coord[1] >= d_coord[1]:
             if d_coord[1] >= 282:
-                if (d_coord[0] - CHESS_INTERVAL1 == all_coord[0] and d_coord[1] == all_coord[1]) or (
-                        d_coord[0] + CHESS_INTERVAL1 == all_coord[0] and d_coord[1] == all_coord[1]) or (
-                        d_coord[0] == all_coord[0] and d_coord[1] + CHESS_INTERVAL1 == all_coord[1]):
+                if d_coord[0] - CHESS_INTERVAL1 == all_coord[0] and d_coord[1] == all_coord[1]:
+                    FEASIBLE_COORD.append(all_coord)
+                elif d_coord[0] + CHESS_INTERVAL1 == all_coord[0] and d_coord[1] == all_coord[1]:
+                    FEASIBLE_COORD.append(all_coord)
+                elif d_coord[0] == all_coord[0] and d_coord[1] + CHESS_INTERVAL1 == all_coord[1]:
                     FEASIBLE_COORD.append(all_coord)
             elif all_coord[0] == d_coord[0] and d_coord[1] + CHESS_INTERVAL1 == all_coord[1]:
                 FEASIBLE_COORD.append(all_coord)
 
         elif "红炮" in name1:
-            if (d_coord[0] == all_coord[0] or d_coord[1] == all_coord[1]) and d_coord != all_coord:
-                if all_coord[0] < d_coord[0]:
-                    if all_coord in INIT_COORD:
-                        self.chess_left_x.append(all_coord[0])
-                        self.chess_left_x.sort(reverse=True)
-                        self.chess_left_y = all_coord[1]
-                    else:
-                        if self.chess_left_x and self.chess_left_x[0] < all_coord[0]:
-                            FEASIBLE_COORD.append(all_coord)
-                        elif not self.chess_left_x and all_coord[0] < d_coord[0]:
-                            FEASIBLE_COORD.append(all_coord)
-
-                elif all_coord[0] > d_coord[0]:
-                    if all_coord in INIT_COORD:
-                        self.chess_right_x.append(all_coord[0])
-                        self.chess_right_x.sort()
-                        self.chess_right_y = all_coord[1]
-                    else:
-                        if self.chess_right_x and all_coord[0] < self.chess_right_x[0]:
-                            FEASIBLE_COORD.append(all_coord)
-                        elif not self.chess_right_x and d_coord[0] < all_coord[0]:
-                            FEASIBLE_COORD.append(all_coord)
-
-                elif all_coord[1] < d_coord[1]:
-                    if all_coord in INIT_COORD:
-                        self.chess_up_x = all_coord[0]
-                        self.chess_up_y.append(all_coord[1])
-                        self.chess_up_y.sort(reverse=True)
-                    else:
-                        if self.chess_up_y and self.chess_up_y[0] < all_coord[1]:
-                            FEASIBLE_COORD.append(all_coord)
-                        elif not self.chess_up_y and all_coord[1] < d_coord[1]:
-                            FEASIBLE_COORD.append(all_coord)
-
-                elif all_coord[1] > d_coord[1]:
-                    if all_coord in INIT_COORD:
-                        self.chess_down_x = all_coord[0]
-                        self.chess_down_y.append(all_coord[1])
-                        self.chess_down_y.sort()
-                    else:
-                        if self.chess_down_y and all_coord[1] < self.chess_down_y[0]:
-                            FEASIBLE_COORD.append(all_coord)
-                        elif not self.chess_down_y and d_coord[1] < all_coord[1]:
-                            FEASIBLE_COORD.append(all_coord)
-
+            rule()
         elif "黑炮" in name1:
-            if (d_coord[0] == all_coord[0] or d_coord[1] == all_coord[1]) and d_coord != all_coord:
-                if all_coord[0] < d_coord[0]:
-                    if all_coord in INIT_COORD:
-                        self.chess_left_x.append(all_coord[0])
-                        self.chess_left_x.sort(reverse=True)
-                        self.chess_left_y = all_coord[1]
-                    else:
-                        if self.chess_left_x and self.chess_left_x[0] < all_coord[0]:
-                            FEASIBLE_COORD.append(all_coord)
-                        elif not self.chess_left_x and all_coord[0] < d_coord[0]:
-                            FEASIBLE_COORD.append(all_coord)
+            rule()
+        elif "红车" in name1:
+            rule()
+        elif "黑车" in name1:
+            rule()
 
-                elif all_coord[0] > d_coord[0]:
-                    if all_coord in INIT_COORD:
-                        self.chess_right_x.append(all_coord[0])
-                        self.chess_right_x.sort()
-                        self.chess_right_y = all_coord[1]
-                    else:
-                        if self.chess_right_x and all_coord[0] < self.chess_right_x[0]:
-                            FEASIBLE_COORD.append(all_coord)
-                        elif not self.chess_right_x and d_coord[0] < all_coord[0]:
-                            FEASIBLE_COORD.append(all_coord)
-
-                elif all_coord[1] < d_coord[1]:
-                    if all_coord in INIT_COORD:
-                        self.chess_up_x = all_coord[0]
-                        self.chess_up_y.append(all_coord[1])
-                        self.chess_up_y.sort(reverse=True)
-                    else:
-                        if self.chess_up_y and self.chess_up_y[0] < all_coord[1]:
-                            FEASIBLE_COORD.append(all_coord)
-                        elif not self.chess_up_y and all_coord[1] < d_coord[1]:
-                            FEASIBLE_COORD.append(all_coord)
-
-                elif all_coord[1] > d_coord[1]:
-                    if all_coord in INIT_COORD:
-                        self.chess_down_x = all_coord[0]
-                        self.chess_down_y.append(all_coord[1])
-                        self.chess_down_y.sort()
-                    else:
-                        if self.chess_down_y and all_coord[1] < self.chess_down_y[0]:
-                            FEASIBLE_COORD.append(all_coord)
-                        elif not self.chess_down_y and d_coord[1] < all_coord[1]:
-                            FEASIBLE_COORD.append(all_coord)
         else:
             pass
 
@@ -507,7 +327,7 @@ class Game(object):
     def operate(self, flag, coord, old_coord, new_coord, un1_coord, un2_coord, eat, name1, name2):
         """棋子操作"""
 
-        def blit1(n):
+        def blit(n):
             """放置棋子"""
 
             if eat:
@@ -539,7 +359,7 @@ class Game(object):
                 print("事件: {}从{}移动到{}".format(name1, old_coord, coord[0]))
                 self.move.play()
 
-            self.window.blit(bg[0], (128, 0))
+            self.window.blit(self.bg[0], (128, 0))
             for a_name, init_coord in zip(CHESS_NAME, INIT_COORD):
                 CHESS_STATE[a_name] = init_coord
             if name2 is not None and eat:
@@ -553,53 +373,46 @@ class Game(object):
             for key, value in zip(CHESS_STATE.keys(), CHESS_STATE.values()):
                 if eat:
                     if name2 != key:
-                        for a in chess_name:
+                        for a in self.chess_name:
                             if a in key:
-                                self.window.blit(chess_name[a], value)
+                                self.window.blit(self.chess_name[a], value)
                 else:
                     if name1 != key:
-                        for a in chess_name:
+                        for a in self.chess_name:
                             if a in key:
-                                self.window.blit(chess_name[a], value)
+                                self.window.blit(self.chess_name[a], value)
+
+            self.go = True
+            self.old_click_coord = old_coord
+            self.end_click_coord = coord[0]
             self.window.blit(n, coord[0])
-            self.window.blit(bg[2], (coord[0]))
-            self.window.blit(bg[2], old_coord)
             self.update()
             coord.clear()
 
         if flag and self.logic(un1_coord[-1]):
-            bg, b_chess, r_chess = self.img_load()
-            chess_name = {"黑卒": b_chess[0], "黑炮": b_chess[1], "黑车": b_chess[2], "黑马": b_chess[3],
-                          "黑象": b_chess[4], "黑士": b_chess[5], "黑将": b_chess[6],
-                          "红卒": r_chess[0], "红炮": r_chess[1], "红车": r_chess[2], "红马": r_chess[3],
-                          "红象": r_chess[4], "红士": r_chess[5], "红将": r_chess[6]}
-            for name in chess_name.keys():
+
+            for name in self.chess_name.keys():
                 if name in name1:
                     self.no_go()
-                    blit1(chess_name[name])
+                    blit(self.chess_name[name])
         else:
             return False
 
     def event(self):
         """事件判断"""
 
-        click_coord = []
-        midpoint = []
         name = None
-        bg, b_chess, r_chess = self.img_load()
+
         while True:
             time.sleep(0.001)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
                         if self.click1 is None:
                             self.click1 = event.pos
-                            if len(click_coord):
-                                self.window.blit(bg[3], click_coord[-1])
                             if len(FEASIBLE_COORD):
                                 FEASIBLE_COORD.clear()
                                 self.chess_left_x.clear()
@@ -617,39 +430,38 @@ class Game(object):
                                 if old_x <= click1_x <= new_x and old_y <= click1_y <= new_y:
                                     name = n
                                     self.name = n
-                                    click_coord.append(old_coord)
-                                    self.window.blit(bg[2], old_coord)
+                                    self.start_click_coord = old_coord
+                                    self.window.blit(self.r_box, old_coord)
                                     self.update()
                             all_coord = INIT_COORD + UNPLACED_COORD
-                            for coord in all_coord:
-                                self.show_dot(name, click_coord[-1], coord)
-                            if len(self.chess_left_x) >= 2:
-                                FEASIBLE_COORD.append((self.chess_left_x[1], self.chess_left_y))
-                            if len(self.chess_right_x) >= 2:
-                                FEASIBLE_COORD.append((self.chess_right_x[1], self.chess_right_y))
-                            if len(self.chess_up_y) >= 2:
-                                FEASIBLE_COORD.append((self.chess_up_x, self.chess_up_y[1]))
-                            if len(self.chess_down_y) >= 2:
-                                FEASIBLE_COORD.append((self.chess_down_x, self.chess_down_y[1]))
-                            for key, value in CHESS_INIT.items():
-                                if value in FEASIBLE_COORD:
-                                    if self.name[0] == key[0]:
-                                        FEASIBLE_COORD.remove(value)
-                            for a in FEASIBLE_COORD:
-                                self.window.blit(self.dot, a)
+                            if self.start_click_coord is not None:
+                                for coord in all_coord:
+                                    self.show_dot(name, self.start_click_coord, coord)
+                                if "炮" in self.name:
+                                    if len(self.chess_left_x) >= 2:
+                                        FEASIBLE_COORD.append((self.chess_left_x[1], self.chess_left_y))
+                                    if len(self.chess_right_x) >= 2:
+                                        FEASIBLE_COORD.append((self.chess_right_x[1], self.chess_right_y))
+                                    if len(self.chess_up_y) >= 2:
+                                        FEASIBLE_COORD.append((self.chess_up_x, self.chess_up_y[1]))
+                                    if len(self.chess_down_y) >= 2:
+                                        FEASIBLE_COORD.append((self.chess_down_x, self.chess_down_y[1]))
+                                elif "车" in self.name:
+                                    if len(self.chess_left_x) >= 1:
+                                        FEASIBLE_COORD.append((self.chess_left_x[0], self.chess_left_y))
+                                    if len(self.chess_right_x) >= 1:
+                                        FEASIBLE_COORD.append((self.chess_right_x[0], self.chess_right_y))
+                                    if len(self.chess_up_y) >= 1:
+                                        FEASIBLE_COORD.append((self.chess_up_x, self.chess_up_y[0]))
+                                    if len(self.chess_down_y) >= 1:
+                                        FEASIBLE_COORD.append((self.chess_down_x, self.chess_down_y[0]))
+                                for key, value in CHESS_INIT.items():
+                                    if value in FEASIBLE_COORD:
+                                        if self.name[0] == key[0]:
+                                            FEASIBLE_COORD.remove(value)
+                                for a in FEASIBLE_COORD:
+                                    self.window.blit(self.dot, a)
                                 self.update()
-                            """for dot_coord in FEASIBLE_COORD:
-                                dot_x = dot_coord[0] + CHESS_INTERVAL1
-                                dot_y = dot_coord[1] + CHESS_INTERVAL1
-                                point_x = (dot_coord[0] + dot_x) / 2 - 7
-                                point_y = (dot_coord[1] + dot_y) / 2 - 7
-                                midpoint.append((point_x, point_y))
-                            for point in midpoint:
-                                init_x = point[0] - 5
-                                init_y = point[1] - 5
-                                print(init_x, init_y)
-                                self.window.blit(self.dot, (init_x, init_y))
-                                self.update()"""
 
                         else:
                             self.click2 = event.pos
@@ -657,6 +469,21 @@ class Game(object):
                             print("当前 red:{},black:{}".format(self.red, self.black))
                             self.click1 = None
                             self.click2 = None
+                            if not self.go:
+                                self.window.blit(self.bg[0], (128, 0))
+                                for chess_name in self.chess_name.keys():
+                                    for key, value in CHESS_INIT.items():
+                                        if chess_name in key:
+                                            self.window.blit(self.chess_name[chess_name], value)
+                            else:
+                                self.window.blit(self.bg[0], (128, 0))
+                                for chess_name in self.chess_name.keys():
+                                    for key, value in CHESS_STATE.items():
+                                        if chess_name in key:
+                                            self.window.blit(self.chess_name[chess_name], value)
+                                self.window.blit(self.b_box, self.old_click_coord)
+                                self.window.blit(self.b_box, self.end_click_coord)
+                            self.update()
 
             if not pygame.mixer.music.get_busy():
                 self.index += 1
