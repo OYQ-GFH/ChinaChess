@@ -57,6 +57,8 @@ class Game(object):
     old_click_coord = None
     end_click_coord = None
     go = False
+    m_chess_coord = {}
+    no_go_coord = {}
 
     def __init__(self):
         """初始化"""
@@ -81,7 +83,7 @@ class Game(object):
         self.b_box = pygame.image.load("images/b_box.png")
         self.dot = pygame.image.load("./images/dot.png")
         self.bg1 = pygame.image.load("images/bg1.png")
-        self.bg2 = pygame.image.load("images/bg3.png")
+        self.bg2 = pygame.image.load("images/bg2.png")
         self.b_z = pygame.image.load("images/b_z.png")
         self.b_p = pygame.image.load("images/b_p.png")
         self.b_c = pygame.image.load("images/b_c.png")
@@ -304,15 +306,23 @@ class Game(object):
             elif all_coord[0] == d_coord[0] and d_coord[1] + CHESS_INTERVAL1 == all_coord[1]:
                 FEASIBLE_COORD.append(all_coord)
 
-        elif "红炮" in name1:
+        elif "炮" in name1 or "车" in name1:
             rule()
-        elif "黑炮" in name1:
-            rule()
-        elif "红车" in name1:
-            rule()
-        elif "黑车" in name1:
-            rule()
-
+        elif "马" in name1:
+            self.m_chess_coord["up_left"] = d_coord[0] - CHESS_INTERVAL1, d_coord[1] - CHESS_INTERVAL1 * 2
+            self.m_chess_coord["up_right"] = d_coord[0] + CHESS_INTERVAL1, d_coord[1] - CHESS_INTERVAL1 * 2
+            self.m_chess_coord["left_up"] = d_coord[0] - CHESS_INTERVAL1 * 2, d_coord[1] - CHESS_INTERVAL1
+            self.m_chess_coord["left_down"] = d_coord[0] - CHESS_INTERVAL1 * 2, d_coord[1] + CHESS_INTERVAL1
+            self.m_chess_coord["right_up"] = d_coord[0] + CHESS_INTERVAL1 * 2, d_coord[1] - CHESS_INTERVAL1
+            self.m_chess_coord["right_down"] = d_coord[0] + CHESS_INTERVAL1 * 2, d_coord[1] + CHESS_INTERVAL1
+            self.m_chess_coord["down_left"] = d_coord[0] - CHESS_INTERVAL1, d_coord[1] + CHESS_INTERVAL1 * 2
+            self.m_chess_coord["down_right"] = d_coord[0] + CHESS_INTERVAL1, d_coord[1] + CHESS_INTERVAL1 * 2
+            self.no_go_coord["go_left"] = d_coord[0] - CHESS_INTERVAL1, d_coord[1]
+            self.no_go_coord["go_right"] = d_coord[0] + CHESS_INTERVAL1, d_coord[1]
+            self.no_go_coord["go_up"] = d_coord[0], d_coord[1] - CHESS_INTERVAL1
+            self.no_go_coord["go_down"] = d_coord[0], d_coord[1] + CHESS_INTERVAL1
+        elif "象" in name1:
+            pass
         else:
             pass
 
@@ -423,6 +433,8 @@ class Game(object):
                                 self.chess_right_x.clear()
                                 self.chess_up_y.clear()
                                 self.chess_down_y.clear()
+                                self.m_chess_coord.clear()
+                                self.no_go_coord.clear()
                             for n, old_coord, new_coord in zip(CHESS_NAME, INIT_COORD, INIT_RANGER):
                                 old_x = old_coord[0]
                                 old_y = old_coord[1]
@@ -460,6 +472,12 @@ class Game(object):
                                         FEASIBLE_COORD.append((self.chess_up_x, self.chess_up_y[0]))
                                     if len(self.chess_down_y) >= 1:
                                         FEASIBLE_COORD.append((self.chess_down_x, self.chess_down_y[0]))
+                                elif "马" in self.name:
+                                    for key1, value1 in self.no_go_coord.items():
+                                        for key2, value2 in self.m_chess_coord.items():
+                                            if value1 not in INIT_COORD and value1 in UNPLACED_COORD:
+                                                if key1[3:] == key2[:2] or key1[3:] == key2[:4] or key1[3:] == key2[:5]:
+                                                    FEASIBLE_COORD.append(value2)
                                 if not self.go:
                                     for key, value in CHESS_INIT.items():
                                         if value in FEASIBLE_COORD:
@@ -472,6 +490,7 @@ class Game(object):
                                             if self.name[0] == key[0]:
                                                 print(self.name)
                                                 FEASIBLE_COORD.remove(value)
+
                                 for a_coord in FEASIBLE_COORD:
                                     self.window.blit(self.dot, a_coord)
                                 self.update()
