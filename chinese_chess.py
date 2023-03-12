@@ -59,6 +59,10 @@ class Game(object):
     go = False
     m_chess_coord = {}
     no_go_coord = {}
+    code = None
+    ai = None
+    ai_coord1 = None
+    ai_coord2 = None
 
     def __init__(self):
         """初始化"""
@@ -149,6 +153,34 @@ class Game(object):
         self.window.blit(self.r_chess[0], INIT_COORD[30])
         self.window.blit(self.r_chess[0], INIT_COORD[31])
 
+    def no_go(self):
+        if self.red:
+            pygame.display.set_icon(self.ico2)
+            self.black = True
+            self.red = False
+        elif self.black:
+            pygame.display.set_icon(self.ico1)
+            self.black = False
+            self.red = True
+
+    @staticmethod
+    def logic(f_coord):
+        """棋子走棋逻辑判断"""
+        if f_coord in FEASIBLE_COORD:
+            return True
+        return False
+
+    @staticmethod
+    def play_music(music):
+        """播放音频"""
+        pygame.mixer.music.load("./musics/{}".format(music))
+        pygame.mixer.music.set_volume(0.5)
+        pygame.mixer.music.play()
+
+    @staticmethod
+    def update():
+        pygame.display.update()
+
     def click_1(self, click1, click2):
         """第一次点击"""
 
@@ -225,15 +257,79 @@ class Game(object):
                 else:
                     return
 
-    def no_go(self):
-        if self.red:
-            pygame.display.set_icon(self.ico2)
-            self.black = True
-            self.red = False
-        elif self.black:
-            pygame.display.set_icon(self.ico1)
-            self.black = False
-            self.red = True
+    def operate(self, flag, coord, old_coord, new_coord, un1_coord, un2_coord, eat, name1, name2):
+        """棋子操作"""
+
+        def blit(n):
+            """放置棋子"""
+
+            if eat:
+                CHESS_NAME.remove(name1)
+                INIT_COORD.remove(old_coord)
+                INIT_RANGER.remove(new_coord)
+                CHESS_NAME.remove(name2)
+                INIT_COORD.remove(un1_coord[-1])
+                INIT_RANGER.remove(un2_coord[-1])
+                CHESS_NAME.insert(0, name1)
+                INIT_COORD.insert(0, un1_coord[-1])
+                INIT_RANGER.insert(0, un2_coord[-1])
+                UNPLACED_COORD.insert(0, old_coord)
+                UNPLACED_RANGER.insert(0, new_coord)
+                # print("事件: {}吃掉了{}".format(name1, name2))
+                self.eat.play()
+
+            else:
+                CHESS_NAME.remove(name1)
+                INIT_COORD.remove(old_coord)
+                INIT_RANGER.remove(new_coord)
+                UNPLACED_COORD.remove(un1_coord[-1])
+                UNPLACED_RANGER.remove(un2_coord[-1])
+                CHESS_NAME.insert(0, name1)
+                INIT_COORD.insert(0, un1_coord[-1])
+                INIT_RANGER.insert(0, un2_coord[-1])
+                UNPLACED_COORD.insert(0, old_coord)
+                UNPLACED_RANGER.insert(0, new_coord)
+                # print("事件: {}从{}移动到{}".format(name1, old_coord, coord[0]))
+                self.move.play()
+
+            self.window.blit(self.bg[0], (128, 0))
+            for a_name, init_coord in zip(CHESS_NAME, INIT_COORD):
+                CHESS_STATE[a_name] = init_coord
+            if name2 is not None and eat:
+                for keys, value in zip(list(CHESS_STATE.keys()), list(CHESS_STATE.values())):
+                    if name2 == keys:
+                        del CHESS_STATE[name2]
+            if name2 is not None and not eat:
+                for keys, value in zip(list(CHESS_STATE.keys()), list(CHESS_STATE.values())):
+                    if name2 == keys:
+                        del CHESS_STATE[name2]
+            for key, value in zip(CHESS_STATE.keys(), CHESS_STATE.values()):
+                if eat:
+                    if name2 != key:
+                        for a in self.chess_name:
+                            if a in key:
+                                self.window.blit(self.chess_name[a], value)
+                else:
+                    if name1 != key:
+                        for a in self.chess_name:
+                            if a in key:
+                                self.window.blit(self.chess_name[a], value)
+
+            self.go = True
+            self.old_click_coord = old_coord
+            self.end_click_coord = coord[0]
+            self.window.blit(n, coord[0])
+            self.update()
+            coord.clear()
+
+        if flag and self.logic(un1_coord[-1]):
+
+            for name in self.chess_name.keys():
+                if name in name1:
+                    self.no_go()
+                    blit(self.chess_name[name])
+        else:
+            return False
 
     def show_dot(self, name1, d_coord, all_coord):
         """计算棋子可以走的点位"""
@@ -326,94 +422,23 @@ class Game(object):
         else:
             pass
 
-    @staticmethod
-    def logic(f_coord):
-        """棋子走棋逻辑判断"""
-
-        if f_coord in FEASIBLE_COORD:
-            return True
-        return False
-
-    def operate(self, flag, coord, old_coord, new_coord, un1_coord, un2_coord, eat, name1, name2):
-        """棋子操作"""
-
-        def blit(n):
-            """放置棋子"""
-
-            if eat:
-                CHESS_NAME.remove(name1)
-                INIT_COORD.remove(old_coord)
-                INIT_RANGER.remove(new_coord)
-                CHESS_NAME.remove(name2)
-                INIT_COORD.remove(un1_coord[-1])
-                INIT_RANGER.remove(un2_coord[-1])
-                CHESS_NAME.insert(0, name1)
-                INIT_COORD.insert(0, un1_coord[-1])
-                INIT_RANGER.insert(0, un2_coord[-1])
-                UNPLACED_COORD.insert(0, old_coord)
-                UNPLACED_RANGER.insert(0, new_coord)
-                print("事件: {}吃掉了{}".format(name1, name2))
-                self.eat.play()
-
-            else:
-                CHESS_NAME.remove(name1)
-                INIT_COORD.remove(old_coord)
-                INIT_RANGER.remove(new_coord)
-                UNPLACED_COORD.remove(un1_coord[-1])
-                UNPLACED_RANGER.remove(un2_coord[-1])
-                CHESS_NAME.insert(0, name1)
-                INIT_COORD.insert(0, un1_coord[-1])
-                INIT_RANGER.insert(0, un2_coord[-1])
-                UNPLACED_COORD.insert(0, old_coord)
-                UNPLACED_RANGER.insert(0, new_coord)
-                print("事件: {}从{}移动到{}".format(name1, old_coord, coord[0]))
-                self.move.play()
-
-            self.window.blit(self.bg[0], (128, 0))
-            for a_name, init_coord in zip(CHESS_NAME, INIT_COORD):
-                CHESS_STATE[a_name] = init_coord
-            if name2 is not None and eat:
-                for keys, value in zip(list(CHESS_STATE.keys()), list(CHESS_STATE.values())):
-                    if name2 == keys:
-                        del CHESS_STATE[name2]
-            if name2 is not None and not eat:
-                for keys, value in zip(list(CHESS_STATE.keys()), list(CHESS_STATE.values())):
-                    if name2 == keys:
-                        del CHESS_STATE[name2]
-            for key, value in zip(CHESS_STATE.keys(), CHESS_STATE.values()):
-                if eat:
-                    if name2 != key:
-                        for a in self.chess_name:
-                            if a in key:
-                                self.window.blit(self.chess_name[a], value)
-                else:
-                    if name1 != key:
-                        for a in self.chess_name:
-                            if a in key:
-                                self.window.blit(self.chess_name[a], value)
-
-            self.go = True
-            self.old_click_coord = old_coord
-            self.end_click_coord = coord[0]
-            self.window.blit(n, coord[0])
-            self.update()
-            coord.clear()
-
-        if flag and self.logic(un1_coord[-1]):
-
-            for name in self.chess_name.keys():
-                if name in name1:
-                    self.no_go()
-                    blit(self.chess_name[name])
-        else:
-            return False
-
     def event(self):
         """事件判断"""
 
         name = None
         while True:
             time.sleep(0.001)
+
+            if not pygame.mixer.music.get_busy():
+                all_music, num_list, index = random_num()
+                music = all_music[num_list[self.index]]
+                if self.index <= index:
+                    self.play_music(music)
+                else:
+                    self.index = 0
+                    self.play_music(music)
+                self.index += 1
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -516,28 +541,6 @@ class Game(object):
                                 self.window.blit(self.b_box, self.old_click_coord)
                                 self.window.blit(self.b_box, self.end_click_coord)
                             self.update()
-
-            if not pygame.mixer.music.get_busy():
-                all_music, num_list, index = random_num()
-                music = all_music[num_list[self.index]]
-                if self.index <= index:
-                    self.play_music(music)
-                else:
-                    self.index = 0
-                    self.play_music(music)
-                self.index += 1
-
-    @staticmethod
-    def update():
-        pygame.display.update()
-
-    @staticmethod
-    def play_music(music):
-        """播放音频"""
-
-        pygame.mixer.music.load("./musics/{}".format(music))
-        pygame.mixer.music.set_volume(0.5)
-        pygame.mixer.music.play()
 
 
 if __name__ == "__main__":
