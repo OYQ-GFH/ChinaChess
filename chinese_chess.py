@@ -59,10 +59,6 @@ class Game(object):
     go = False
     m_chess_coord = {}
     no_go_coord = {}
-    code = None
-    ai = None
-    ai_coord1 = None
-    ai_coord2 = None
 
     def __init__(self):
         """初始化"""
@@ -87,7 +83,7 @@ class Game(object):
         self.b_box = pygame.image.load("images/b_box.png")
         self.dot = pygame.image.load("./images/dot.png")
         self.bg1 = pygame.image.load("images/bg1.png")
-        self.bg2 = pygame.image.load("images/bg2.png")
+        self.bg2 = pygame.image.load("images/bg3.png")
         self.b_z = pygame.image.load("images/b_z.png")
         self.b_p = pygame.image.load("images/b_p.png")
         self.b_c = pygame.image.load("images/b_c.png")
@@ -379,8 +375,27 @@ class Game(object):
                             FEASIBLE_COORD.append(all_coord)
                         elif not self.chess_down_y and d_coord[1] < all_coord[1]:
                             FEASIBLE_COORD.append(all_coord)
-
-        if "红卒" in name1 and all_coord[1] <= d_coord[1]:
+        def boss():
+            if "士"in name1:
+                    if d_coord[0] == all_coord[0] - CHESS_INTERVAL1 and d_coord[1] == all_coord[1] - CHESS_INTERVAL1:
+                         FEASIBLE_COORD.append(all_coord)
+                    elif d_coord[0] == all_coord[0] + CHESS_INTERVAL1 and d_coord[1] == all_coord[1] - CHESS_INTERVAL1:
+                        FEASIBLE_COORD.append(all_coord)
+                    elif d_coord[0] == all_coord[0]  - CHESS_INTERVAL1 and d_coord[1] == all_coord[1] + CHESS_INTERVAL1:
+                        FEASIBLE_COORD.append(all_coord)
+                    elif d_coord[0] == all_coord[0]  + CHESS_INTERVAL1 and d_coord[1] == all_coord[1] + CHESS_INTERVAL1:
+                        FEASIBLE_COORD.append(all_coord)
+            elif "将" in name1:
+                    if d_coord[0] == all_coord[0] - CHESS_INTERVAL1 and d_coord[1] == all_coord[1]:
+                        FEASIBLE_COORD.append(all_coord)
+                    elif d_coord[0] == all_coord[0] + CHESS_INTERVAL1 and d_coord[1] == all_coord[1]:
+                        FEASIBLE_COORD.append(all_coord)
+                    elif d_coord[0] == all_coord[0] and d_coord[1] == all_coord[1] - CHESS_INTERVAL1:
+                        FEASIBLE_COORD.append(all_coord)
+                    elif d_coord[0] == all_coord[0] and d_coord[1] == all_coord[1] + CHESS_INTERVAL1:
+                        FEASIBLE_COORD.append(all_coord)
+                        
+        if "卒" in name1 and all_coord[1] <= d_coord[1]:
             if d_coord[1] <= 226:
                 if d_coord[0] - CHESS_INTERVAL1 == all_coord[0] and d_coord[1] == all_coord[1]:
                     FEASIBLE_COORD.append(all_coord)
@@ -418,10 +433,23 @@ class Game(object):
             self.no_go_coord["go_up"] = d_coord[0], d_coord[1] - CHESS_INTERVAL1
             self.no_go_coord["go_down"] = d_coord[0], d_coord[1] + CHESS_INTERVAL1
         elif "象" in name1:
-            pass
-        else:
-            pass
+            self.m_chess_coord["up_left"] = d_coord[0] - CHESS_INTERVAL1 * 2, d_coord[1] + CHESS_INTERVAL1 * 2
+            self.m_chess_coord["up_right"] = d_coord[0] + CHESS_INTERVAL1 * 2, d_coord[1] + CHESS_INTERVAL1 * 2
+            self.m_chess_coord["down_left"] = d_coord[0] - CHESS_INTERVAL1 * 2, d_coord[1] - CHESS_INTERVAL1 * 2
+            self.m_chess_coord["down_right"] = d_coord[0] + CHESS_INTERVAL1 * 2, d_coord[1] - CHESS_INTERVAL1 * 2
+            self.no_go_coord["up_left"] = d_coord[0] - CHESS_INTERVAL1, d_coord[1] + CHESS_INTERVAL1
+            self.no_go_coord["up_right"]= d_coord[0] + CHESS_INTERVAL1, d_coord[1] + CHESS_INTERVAL1
+            self.no_go_coord["down_left"] = d_coord[0] - CHESS_INTERVAL1, d_coord[1] - CHESS_INTERVAL1
+            self.no_go_coord["down_right"] = d_coord[0] + CHESS_INTERVAL1 , d_coord[1] - CHESS_INTERVAL1
 
+        elif "士" in name1 or "将"in name1:
+            if "红" in name1:
+                if CHESS_INTERVAL1 * 3 + CHESS_X <= all_coord[0] <= CHESS_INTERVAL1 * 5 + CHESS_X and CHESS_INTERVAL1 * 7 + CHESS_Y <= all_coord[1] <= CHESS_INTERVAL1 * 9 + CHESS_Y:
+                    boss()
+            elif "黑" in name1:
+                if CHESS_INTERVAL1 * 3 + CHESS_X <= all_coord[0] <= CHESS_INTERVAL1 * 5 + CHESS_X and CHESS_Y <= all_coord[1] <= CHESS_INTERVAL1 * 2 + CHESS_Y:
+                    boss()
+ 
     def event(self):
         """事件判断"""
 
@@ -503,6 +531,12 @@ class Game(object):
                                             if value1 not in INIT_COORD and value1 in UNPLACED_COORD:
                                                 if key1[3:] == key2[:2] or key1[3:] == key2[:4] or key1[3:] == key2[:5]:
                                                     FEASIBLE_COORD.append(value2)
+                                elif "象" in self.name:
+                                    for key3, value3 in self.no_go_coord.items():
+                                        for key4, value4 in self.m_chess_coord.items():
+                                            if value3 not in INIT_COORD and value3 in UNPLACED_COORD:
+                                                if key3 == key4:
+                                                     FEASIBLE_COORD.append(value4)
                                 if not self.go:
                                     for key, value in CHESS_INIT.items():
                                         if value in FEASIBLE_COORD:
