@@ -149,34 +149,6 @@ class Game(object):
         self.window.blit(self.r_chess[0], INIT_COORD[30])
         self.window.blit(self.r_chess[0], INIT_COORD[31])
 
-    def no_go(self):
-        if self.red:
-            pygame.display.set_icon(self.ico2)
-            self.black = True
-            self.red = False
-        elif self.black:
-            pygame.display.set_icon(self.ico1)
-            self.black = False
-            self.red = True
-
-    @staticmethod
-    def logic(f_coord):
-        """棋子走棋逻辑判断"""
-        if f_coord in FEASIBLE_COORD:
-            return True
-        return False
-
-    @staticmethod
-    def play_music(music):
-        """播放音频"""
-        pygame.mixer.music.load("./musics/{}".format(music))
-        pygame.mixer.music.set_volume(0.5)
-        pygame.mixer.music.play()
-
-    @staticmethod
-    def update():
-        pygame.display.update()
-
     def click_1(self, click1, click2):
         """第一次点击"""
 
@@ -252,7 +224,24 @@ class Game(object):
                     go_on(e)
                 else:
                     return
+                
+    def no_go(self):
+        if self.red:
+            pygame.display.set_icon(self.ico2)
+            self.black = True
+            self.red = False
+        elif self.black:
+            pygame.display.set_icon(self.ico1)
+            self.black = False
+            self.red = True
 
+    @staticmethod
+    def logic(f_coord):
+        """棋子走棋逻辑判断"""
+        if f_coord in FEASIBLE_COORD:
+            return True
+        return False
+    
     def operate(self, flag, coord, old_coord, new_coord, un1_coord, un2_coord, eat, name1, name2):
         """棋子操作"""
 
@@ -449,7 +438,14 @@ class Game(object):
             elif "黑" in name1:
                 if CHESS_INTERVAL1 * 3 + CHESS_X <= all_coord[0] <= CHESS_INTERVAL1 * 5 + CHESS_X and CHESS_Y <= all_coord[1] <= CHESS_INTERVAL1 * 2 + CHESS_Y:
                     boss()
- 
+                    
+    @staticmethod
+    def play_music(music):
+        """播放音频"""
+        pygame.mixer.music.load("./musics/{}".format(music))
+        pygame.mixer.music.set_volume(0.5)
+        pygame.mixer.music.play()
+        
     def event(self):
         """事件判断"""
 
@@ -576,7 +572,11 @@ class Game(object):
                                 self.window.blit(self.b_box, self.end_click_coord)
                             self.update()
 
+    @staticmethod
+    def update():
+        pygame.display.update()
 
+        
 if __name__ == "__main__":
     game = Game()
     game.img_place()
