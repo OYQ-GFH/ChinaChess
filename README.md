@@ -4,8 +4,6 @@
 ![Python](https://img.shields.io/badge/python-3-brightgreen)
 ![Pygame](https://img.shields.io/badge/pygame-2.1.3-brightgreen)
 
-[TOC]
-
 #### 项目简介
 
 > 纯python实现中国象棋,基于pygame模块开发,如在运行过程中
@@ -28,6 +26,5 @@
 
 如果该项目对您有所帮助，欢迎捐赠，谢谢！
 
-<img src="./images/关于捐赠/微信.jpeg" alt="WechatIMG8" style="zoom:25%;" />
-
-<img src="./images/关于捐赠/支付宝.jpeg" alt="WechatIMG9" style="zoom:17%;" />
+![wechat](https://github.com/OYQ-GFH/ChinaChess/blob/main/images/%E5%85%B3%E4%BA%8E%E6%8D%90%E8%B5%A0/%E5%BE%AE%E4%BF%A1.jpeg)
+![zfb](https://github.com/OYQ-GFH/ChinaChess/blob/main/images/关于捐赠/支付宝.jpeg)
