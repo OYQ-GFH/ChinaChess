@@ -68,10 +68,8 @@ class Game(object):
         # 初始化音效
         self.move = pygame.mixer.Sound("musics/move.WAV")
         self.eat = pygame.mixer.Sound("./musics/eat.WAV")
-        self.eat_boss = pygame.mixer.Sound("./musics/eat_boss.WAV")
         self.move.set_volume(1)
         self.eat.set_volume(1)
-        self.eat_boss.set_volume(1)
         pygame.mixer.music.load("./musics/start.mp3")
         pygame.mixer.music.set_volume(0.5)
         pygame.mixer.music.play()
@@ -471,10 +469,6 @@ class Game(object):
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        sys.exit()
 
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
