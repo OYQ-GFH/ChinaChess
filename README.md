@@ -14,13 +14,13 @@
 
 #### 项目结构
 
-> / images	图片素材
->
-> / musics	音乐素材
->
-> chinese_chess.py	主程序
->
-> constant	常量模块
+```python
+/ images  # 图片素材
+/ musics  # 音乐素材
+
+chinese_chess.py  # 主程序
+constant  # 常量模块
+```
 
 #### 关于捐赠
 
