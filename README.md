@@ -16,18 +16,18 @@
 
 #### 项目结构
 
-> --- ./mian
+> / images	图片素材
 >
-> ​     --- /images 图片素材
+> / musics	音乐素材
 >
-> ​    --- /music  音乐素材
+> chinese_chess.py	主程序
 >
-> ​    --- chinese_chess.py 主程序       <------ 运行这个
->
->    --- constant.py 常量模块
+> constant	常量模块
 
 #### 关于捐赠
 
 如果该项目对您有所帮助，欢迎捐赠，谢谢！
 
-<img src="/Users/macos/Desktop/WechatIMG8.jpeg" alt="WechatIMG8" style="zoom:25%;" /><img src="/Users/macos/Desktop/WechatIMG9.jpeg" alt="WechatIMG9" style="zoom:36%;" />
+<img src="./images/关于捐赠/微信.jpeg" alt="WechatIMG8" style="zoom:25%;" />
+
+<img src="./images/关于捐赠/支付宝.jpeg" alt="WechatIMG9" style="zoom:17%;" />
