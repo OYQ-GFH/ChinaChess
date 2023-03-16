@@ -24,7 +24,7 @@ constant  # 常量模块
 
 #### 关于捐赠
 
-如果该项目对您有所帮助，欢迎捐赠，谢谢！
+如果该项目对您有所帮助，欢迎捐赠，谢谢支持！
 
 ![wechat](https://github.com/OYQ-GFH/ChinaChess/blob/main/images/%E5%85%B3%E4%BA%8E%E6%8D%90%E8%B5%A0/%E5%BE%AE%E4%BF%A1.jpeg)
 ![zfb](https://github.com/OYQ-GFH/ChinaChess/blob/main/images/关于捐赠/支付宝.jpeg)
