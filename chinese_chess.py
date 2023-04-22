@@ -452,18 +452,19 @@ class Game(object):
         """事件判断"""
 
         name = None
+        all_music, num_list, index = random_num()
+        print(all_music, num_list, index)
         while True:
             time.sleep(0.001)
 
             if not pygame.mixer.music.get_busy():
-                all_music, num_list, index = random_num()
                 music = all_music[num_list[self.index]]
-                if self.index <= index:
+                print(music, self.index)
+                if self.index < index:
                     self.play_music(music)
-                else:
-                    self.index = 0
-                    self.play_music(music)
-                self.index += 1
+                    self.index += 1
+                    if self.index == index:
+                        self.index = 0
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
