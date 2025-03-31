@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="756" height="560" viewBox="0 0 756 560" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景渐变 -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8B4513;stop-opacity:0.7"/>
+      <stop offset="100%" style="stop-color:#D2691E;stop-opacity:0.7"/>
+    </linearGradient>
+    
+    <!-- 棋子图案 - 增强对比度 -->
+    <pattern id="chessPattern" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse">
+      <circle cx="100" cy="100" r="40" fill="none" stroke="#FFD700" stroke-width="3" opacity="0.8"/>
+      <path d="M80,80 L120,120 M80,120 L120,80" stroke="#FFD700" stroke-width="3" opacity="0.8"/>
+    </pattern>
+    
+    <!-- 传统纹样 - 使用金色 -->
+    <pattern id="traditionalPattern" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+      <path d="M0,50 Q25,0 50,50 T100,50" fill="none" stroke="#DAA520" stroke-width="2" opacity="0.7"/>
+      <path d="M50,0 Q75,50 50,100 T50,0" fill="none" stroke="#DAA520" stroke-width="2" opacity="0.7"/>
+    </pattern>
+    
+    <!-- 象棋棋盘格纹 - 更明显的对比 -->
+    <pattern id="boardPattern" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+      <rect width="60" height="60" fill="none" stroke="#B8860B" stroke-width="2" opacity="0.6"/>
+      <line x1="0" y1="0" x2="60" y2="60" stroke="#B8860B" stroke-width="2" opacity="0.6"/>
+      <line x1="60" y1="0" x2="0" y2="60" stroke="#B8860B" stroke-width="2" opacity="0.6"/>
+    </pattern>
+    
+    <!-- 中国传统云纹 - 更鲜明 -->
+    <pattern id="cloudPattern" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
+      <path d="M30,60 Q45,30 60,60 T90,60" fill="none" stroke="#FFA500" stroke-width="2.5" opacity="0.7"/>
+      <path d="M0,90 Q15,60 30,90 T60,90" fill="none" stroke="#FFA500" stroke-width="2.5" opacity="0.7"/>
+      <path d="M60,30 Q75,0 90,30 T120,30" fill="none" stroke="#FFA500" stroke-width="2.5" opacity="0.7"/>
+    </pattern>
+    
+    <!-- 新增：中国结图案 -->
+    <pattern id="chineseKnotPattern" x="0" y="0" width="160" height="160" patternUnits="userSpaceOnUse">
+      <path d="M80,40 C100,40 100,60 80,60 C60,60 60,80 80,80 C100,80 100,100 80,100 C60,100 60,120 80,120 M40,80 C40,60 60,60 60,80 C60,100 80,100 80,80 C80,60 100,60 100,80 C100,100 120,100 120,80" 
+            fill="none" stroke="#FF4500" stroke-width="2.5" opacity="0.7"/>
+    </pattern>
+    
+    <!-- 新增：龙纹图案 -->
+    <pattern id="dragonPattern" x="0" y="0" width="240" height="240" patternUnits="userSpaceOnUse">
+      <path d="M60,120 C90,100 120,140 150,120 C180,100 210,140 240,120 M30,180 C60,160 90,200 120,180 C150,160 180,200 210,180" 
+            fill="none" stroke="#FF8C00" stroke-width="3" opacity="0.8"/>
+    </pattern>
+  </defs>
+  
+  <!-- 主背景 -->
+  <rect width="100%" height="100%" fill="url(#bgGradient)"/>
+  
+  <!-- 装饰图案层 - 重新排列顺序和透明度 -->
+  <rect width="100%" height="100%" fill="url(#boardPattern)"/>
+  <rect width="100%" height="100%" fill="url(#traditionalPattern)"/>
+  <rect width="100%" height="100%" fill="url(#cloudPattern)"/>
+  <rect width="100%" height="100%" fill="url(#chessPattern)"/>
+  <rect width="100%" height="100%" fill="url(#chineseKnotPattern)"/>
+  <rect width="100%" height="100%" fill="url(#dragonPattern)"/>
+  
+  <!-- 边框装饰 - 更华丽的边框 -->
+  <rect x="10" y="10" width="736" height="540" stroke="#FFD700" stroke-width="4" fill="none" opacity="0.9">
+    <animate attributeName="stroke-opacity" values="0.7;0.9;0.7" dur="3s" repeatCount="indefinite" />
+  </rect>
+  
+  <!-- 角落装饰 - 使用金色 -->
+  <path d="M10,10 L60,10 L60,30 L30,30 L30,60 L10,60 Z" fill="#DAA520" opacity="0.9"/>
+  <path d="M746,10 L696,10 L696,30 L726,30 L726,60 L746,60 Z" fill="#DAA520" opacity="0.9"/>
+  <path d="M10,550 L60,550 L60,530 L30,530 L30,500 L10,500 Z" fill="#DAA520" opacity="0.9"/>
+  <path d="M746,550 L696,550 L696,530 L726,530 L726,500 L746,500 Z" fill="#DAA520" opacity="0.9"/>
+  
+  <!-- 四周点缀 -->
+  <circle cx="100" cy="100" r="15" fill="#FFD700" opacity="0.6"/>
+  <circle cx="656" cy="100" r="15" fill="#FFD700" opacity="0.6"/>
+  <circle cx="100" cy="460" r="15" fill="#FFD700" opacity="0.6"/>
+  <circle cx="656" cy="460" r="15" fill="#FFD700" opacity="0.6"/>
+</svg>
